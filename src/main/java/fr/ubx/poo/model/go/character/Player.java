@@ -4,19 +4,16 @@
 
 package fr.ubx.poo.model.go.character;
 
-import fr.ubx.poo.game.Direction;
-import fr.ubx.poo.game.Position;
-import fr.ubx.poo.game.WorldEntity;
+import fr.ubx.poo.game.*;
 import fr.ubx.poo.model.Movable;
 import fr.ubx.poo.model.go.GameObject;
-import fr.ubx.poo.game.Game;
 
 public class Player extends GameObject implements Movable {
 
-    private final boolean alive = true;
+    private boolean alive = true;
     Direction direction;
     private boolean moveRequested = false;
-    private int lives = 1;
+    private int lives;
     private boolean winner;
 
     public Player(Game game, Position position) {
@@ -56,6 +53,20 @@ public class Player extends GameObject implements Movable {
         if (moveRequested) {
             if (canMove(direction)) {
                 doMove(direction);
+                if(this.game.getWorld().findMonsters().contains(this.getPosition())){
+                    this.lives--;
+                } else {
+                    try {
+                        if (this.game.getWorld().findPrincess().equals(this.getPosition())) {
+                            this.winner = true;
+                        }
+                    } catch (PositionNotFoundException e) {
+                        System.out.println(e);
+                    }
+                }
+                if(this.getLives() <= 0){
+                    this.alive = false;
+                }
             }
         }
         moveRequested = false;
@@ -68,5 +79,6 @@ public class Player extends GameObject implements Movable {
     public boolean isAlive() {
         return alive;
     }
+
 
 }

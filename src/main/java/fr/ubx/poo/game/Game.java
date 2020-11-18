@@ -25,17 +25,20 @@ public class Game {
     private final List<Monster> monsterList;
     private final String worldPath;
     public int initPlayerLives;
+    public String prefix;
+    public int levels;
 
     public Game(String worldPath) {
         world = new WorldStatic();
         monsterList = new ArrayList<>();
         this.worldPath = worldPath;
-        loadConfig(worldPath);
+            loadConfig(worldPath);
         Position positionPlayer = null;
         Position positionPrincess = null;
         try {
             positionPlayer = world.findPlayer();
             player = new Player(this, positionPlayer);
+
         } catch (PositionNotFoundException e) {
             System.err.println("Position not found : " + e.getLocalizedMessage());
             throw new RuntimeException(e);
@@ -56,11 +59,14 @@ public class Game {
     }
 
     private void loadConfig(String path) {
+
         try (InputStream input = new FileInputStream(new File(path, "config.properties"))) {
             Properties prop = new Properties();
             // load the configuration file
             prop.load(input);
             initPlayerLives = Integer.parseInt(prop.getProperty("lives", "3"));
+            levels = Integer.parseInt(prop.getProperty("levels","3"));
+            prefix = prop.getProperty("prefix", "level");
         } catch (IOException ex) {
             System.err.println("Error loading configuration");
         }

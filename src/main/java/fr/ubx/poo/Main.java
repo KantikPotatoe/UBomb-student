@@ -11,12 +11,17 @@ import fr.ubx.poo.view.sprite.Sprite;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+
 public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
         ImageFactory.getInstance().load();
         String path = getClass().getResource("/sample").getFile();
+        path = URLDecoder.decode(path, StandardCharsets.UTF_8);
+        System.out.println(getClass());
         Game game = new Game(path);
         GameEngine engine = new GameEngine("UBomb", game, stage);
         engine.start();

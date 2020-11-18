@@ -4,7 +4,9 @@
 
 package fr.ubx.poo.game;
 
+import fr.ubx.poo.model.bonus.Pickable;
 import fr.ubx.poo.model.decor.Decor;
+import fr.ubx.poo.model.go.character.Monster;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -82,6 +84,6 @@ public class World {
     }
 
     public boolean isEmpty(Position position) {
-        return grid.get(position) == null;
+        return grid.get(position) instanceof Pickable  || grid.get(position) == null;
     }
 }
