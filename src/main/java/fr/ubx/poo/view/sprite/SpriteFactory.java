@@ -24,7 +24,7 @@ public final class SpriteFactory {
             return new SpriteDecor(layer, factory.get(STONE), position);
         if (decor instanceof Tree)
             return new SpriteDecor(layer, factory.get(TREE), position);
-        if(decor instanceof Box)
+        if (decor instanceof Box)
             return new SpriteDecor(layer, factory.get(BOX), position);
         if (decor instanceof Bonus)
             return new SpriteDecor(layer, factory.get(HEART), position);

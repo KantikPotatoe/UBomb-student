@@ -151,6 +151,7 @@ public final class GameEngine {
         sprites.forEach(Sprite::render);
         // last rendering to have player in the foreground
         spritePlayer.render();
+        spritePrincess.render();
     }
 
     public void start() {
