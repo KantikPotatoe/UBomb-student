@@ -6,6 +6,7 @@ package fr.ubx.poo.model.go.character;
 
 import fr.ubx.poo.game.Direction;
 import fr.ubx.poo.game.Position;
+import fr.ubx.poo.game.WorldEntity;
 import fr.ubx.poo.model.Movable;
 import fr.ubx.poo.model.go.GameObject;
 import fr.ubx.poo.game.Game;
@@ -41,7 +42,9 @@ public class Player extends GameObject implements Movable {
 
     @Override
     public boolean canMove(Direction direction) {
-        return true;
+        return this.game.getWorld().isEmpty(direction.nextPosition(getPosition())) &&
+                this.game.getWorld().isInside(direction.nextPosition(getPosition()));
+
     }
 
     public void doMove(Direction direction) {
