@@ -47,6 +47,8 @@ public class Game {
             System.err.println("Position not found : " + e.getLocalizedMessage());
             throw new RuntimeException(e);
         }
+
+        loadMonsters();
     }
 
     public int getInitPlayerLives() {
@@ -74,6 +76,12 @@ public class Game {
 
     public Princess getPrincess() {
         return this.princess;
+    }
+
+    private void loadMonsters() {
+        for (int i = 0; i < world.findMonsters().size(); i++) {
+            monsterList.add(new Monster(this, world.findMonsters().get(i)));
+        }
     }
 
     public List<Monster> getMonsterList() {
