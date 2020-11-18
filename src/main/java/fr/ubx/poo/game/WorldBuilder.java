@@ -1,5 +1,10 @@
 package fr.ubx.poo.game;
 
+import fr.ubx.poo.model.decor.Decor;
+import fr.ubx.poo.model.decor.Stone;
+import fr.ubx.poo.model.decor.Tree;
+import fr.ubx.poo.model.go.GameObject;
+import fr.ubx.poo.model.go.character.Monster;
 import fr.ubx.poo.model.bonus.*;
 import fr.ubx.poo.model.decor.*;
 
