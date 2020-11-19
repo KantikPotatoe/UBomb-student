@@ -29,10 +29,13 @@ public class Game {
     public int levels;
 
     public Game(String worldPath) {
-        world = new WorldStatic();
+        loadConfig(worldPath);
+        //WorldEntity[][] thisworld = WorldBuilder.generateWorld(worldPath+"/"+prefix+"1.txt");
+
+        world = new World(WorldBuilder.generateWorld(worldPath+"/"+prefix+"1.txt"));
         monsterList = new ArrayList<>();
         this.worldPath = worldPath;
-            loadConfig(worldPath);
+
         Position positionPlayer = null;
         Position positionPrincess = null;
         try {
@@ -43,16 +46,16 @@ public class Game {
             System.err.println("Position not found : " + e.getLocalizedMessage());
             throw new RuntimeException(e);
         }
-        try {
-            positionPrincess = world.findPrincess();
-            princess = new Princess(this, positionPrincess);
-        } catch (PositionNotFoundException e) {
+        //try {
+           // positionPrincess = world.findPrincess();
+            princess = new Princess(this, new Position(-1,-1));
+       /* } catch (PositionNotFoundException e) {
             System.err.println("Position not found : " + e.getLocalizedMessage());
             throw new RuntimeException(e);
-        }
+        }*/
 
         loadMonsters();
-    }
+     }
 
     public int getInitPlayerLives() {
         return initPlayerLives;
