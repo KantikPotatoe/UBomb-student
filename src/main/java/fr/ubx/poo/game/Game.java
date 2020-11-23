@@ -21,19 +21,19 @@ public class Game {
 
     private final World world;
     private final Player player;
-    private final Princess princess;
-    private final List<Monster> monsterList;
     private final String worldPath;
     public int initPlayerLives;
     public String prefix;
     public int levels;
+    private final List<Monster> monsterList;
 
     public Game(String worldPath) {
         loadConfig(worldPath);
         //WorldEntity[][] thisworld = WorldBuilder.generateWorld(worldPath+"/"+prefix+"1.txt");
-
-        world = new World(WorldBuilder.generateWorld(worldPath+"/"+prefix+"1.txt"));
         monsterList = new ArrayList<>();
+        world = new World(WorldBuilder.generateWorld(worldPath+"/"+prefix+"1.txt"));
+        /*world = new World(WorldBuilder.generateWorld(worldPath+"/"+prefix+"2.txt"));
+        world = new World(WorldBuilder.generateWorld(worldPath+"/"+prefix+"3.txt"));*/
         this.worldPath = worldPath;
 
         Position positionPlayer = null;
@@ -46,14 +46,6 @@ public class Game {
             System.err.println("Position not found : " + e.getLocalizedMessage());
             throw new RuntimeException(e);
         }
-        //try {
-           // positionPrincess = world.findPrincess();
-            princess = new Princess(this, new Position(-1,-1));
-       /* } catch (PositionNotFoundException e) {
-            System.err.println("Position not found : " + e.getLocalizedMessage());
-            throw new RuntimeException(e);
-        }*/
-
         loadMonsters();
      }
 
@@ -83,10 +75,6 @@ public class Game {
         return this.player;
     }
 
-    public Princess getPrincess() {
-        return this.princess;
-    }
-
     private void loadMonsters() {
         for (int i = 0; i < world.findMonsters().size(); i++) {
             monsterList.add(new Monster(this, world.findMonsters().get(i)));
@@ -96,6 +84,5 @@ public class Game {
     public List<Monster> getMonsterList() {
         return this.monsterList;
     }
-
 
 }

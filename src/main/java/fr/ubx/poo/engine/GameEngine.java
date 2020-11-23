@@ -33,7 +33,7 @@ public final class GameEngine {
     private final String windowTitle;
     private final Game game;
     private final Player player;
-    private final Princess princess;
+    //private final Princess princess;
     private List<Monster> monsters = new ArrayList<>();
     private final List<Sprite> sprites = new ArrayList<>();
     private final List<Sprite> monsterSprites = new ArrayList<>();
@@ -48,7 +48,7 @@ public final class GameEngine {
         this.windowTitle = windowTitle;
         this.game = game;
         this.player = game.getPlayer();
-        this.princess = game.getPrincess();
+//        this.princess = game.getPrincess();
         this.monsters = game.getMonsterList();
         initialize(stage, game);
         buildAndSetGameLoop();
@@ -77,7 +77,7 @@ public final class GameEngine {
         // Create decor sprites
         game.getWorld().forEach((pos, d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
         spritePlayer = SpriteFactory.createPlayer(layer, player);
-        spritePrincess = SpriteFactory.createPrincess(layer, princess);
+        //spritePrincess = SpriteFactory.createPrincess(layer, princess);
         game.getMonsterList().stream().map(monster -> SpriteFactory.createMonster(layer, monster)).forEach(monsterSprites::add);
 
     }
@@ -142,7 +142,7 @@ public final class GameEngine {
     private void update(long now) {
         player.update(now);
 
-        if (player.isAlive() == false) {
+        if (!player.isAlive()) {
             gameLoop.stop();
             showMessage("Perdu!", Color.RED);
         }
@@ -156,7 +156,7 @@ public final class GameEngine {
         sprites.forEach(Sprite::render);
         // last rendering to have player in the foreground
         spritePlayer.render();
-        spritePrincess.render();
+        //spritePrincess.render();
         monsterSprites.forEach(Sprite::render);
     }
 

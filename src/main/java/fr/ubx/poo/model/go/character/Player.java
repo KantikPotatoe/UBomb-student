@@ -56,13 +56,15 @@ public class Player extends GameObject implements Movable {
                 if(this.game.getWorld().findMonsters().contains(this.getPosition())){
                     this.lives--;
                 } else {
-                    try {
-                        if (this.game.getWorld().findPrincess().equals(this.getPosition())) {
-                            this.winner = true;
-                        }
-                    } catch (PositionNotFoundException e) {
-                        System.out.println(e);
+                    //try {
+
+                    if  (this.game.getWorld().findPrincess().isPresent() &&
+                            this.game.getWorld().findPrincess().get().equals(this.getPosition())) {
+                        this.winner = true;
                     }
+                   /* } catch (PositionNotFoundException e) {
+                        System.out.println(e);
+                    }*/
                 }
                 if(this.getLives() <= 0){
                     this.alive = false;

@@ -31,6 +31,8 @@ public final class SpriteFactory {
             return new SpriteDecor(layer, factory.get(HEART), position);
         if (decor instanceof Key)
             return new SpriteDecor(layer, factory.get(KEY), position);
+        if(decor instanceof Princess)
+            return new SpriteDecor(layer, factory.get(PRINCESS), position );
         return null;
     }
 
@@ -38,10 +40,10 @@ public final class SpriteFactory {
         return new SpritePlayer(layer, player);
     }
 
-    public static Sprite createPrincess(Pane layer, Princess princess) {
+  /*  public static Sprite createPrincess(Pane layer, Princess princess) {
         ImageFactory factory = ImageFactory.getInstance();
         return new SpritePrincess(layer, factory.get(PRINCESS), princess);
-    }
+    }*/
 
     public static Sprite createMonster(Pane layer, Monster monster) {
         ImageFactory factory = ImageFactory.getInstance();

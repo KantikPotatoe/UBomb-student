@@ -7,22 +7,31 @@ package fr.ubx.poo.game;
 import fr.ubx.poo.model.bonus.Pickable;
 import fr.ubx.poo.model.decor.Decor;
 import fr.ubx.poo.model.go.character.Monster;
+import fr.ubx.poo.model.go.character.Princess;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 
 public class World {
     private final Map<Position, Decor> grid;
     private final WorldEntity[][] raw;
     public final Dimension dimension;
+    private final Princess princess;
 
     public World(WorldEntity[][] raw) {
         this.raw = raw;
         dimension = new Dimension(raw.length, raw[0].length);
         grid = WorldBuilder.build(raw, dimension);
+        Position positionPrincess = this.findPrincess().orElse(new Position(-1, -1));
+        //this,
+        princess = new Princess();
+        /*try {
+
+        } catch (PositionNotFoundException e) {
+            System.err.println("Position not found : " + e.getLocalizedMessage());
+            throw new RuntimeException(e);
+        }*/
+
     }
 
     public Position findPlayer() throws PositionNotFoundException {
@@ -36,15 +45,16 @@ public class World {
         throw new PositionNotFoundException("Player");
     }
 
-    public Position findPrincess() throws PositionNotFoundException {
+    public Optional<Position> findPrincess()/* throws PositionNotFoundException*/ {
         for (int x = 0; x < dimension.width; x++) {
             for (int y = 0; y < dimension.height; y++) {
                 if (raw[y][x] == WorldEntity.Princess) {
-                    return new Position(x, y);
+                    return Optional.of(new Position(x, y));
                 }
             }
         }
-        throw new PositionNotFoundException("Princess");
+        return Optional.empty();
+        //throw new PositionNotFoundException("Princess");
     }
 
     public List<Position> findMonsters() {
@@ -57,6 +67,10 @@ public class World {
             }
         }
         return positions;
+    }
+
+    public Optional<Princess> getPrincess() {
+        return Optional.of(princess);
     }
 
     public Decor get(Position position) {
@@ -84,6 +98,6 @@ public class World {
     }
 
     public boolean isEmpty(Position position) {
-        return grid.get(position) instanceof Pickable  || grid.get(position) == null;
+        return grid.get(position) instanceof Pickable || grid.get(position) == null;
     }
 }
