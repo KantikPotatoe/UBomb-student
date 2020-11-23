@@ -11,6 +11,8 @@ import fr.ubx.poo.model.decor.*;
 import java.io.File;
 import java.util.*;
 
+
+
 public class WorldBuilder {
     private final Map<Position, Decor> grid = new Hashtable<>();
 
@@ -22,11 +24,8 @@ public class WorldBuilder {
         List<WorldEntity[]> listEntities = new ArrayList<>();
         try {
             Scanner levelFile = new Scanner(new File(path));
-
             String line;
-            // while loop
             while (levelFile.hasNext() ) {
-                // find next line
                 line = levelFile.next();
                 listEntities.add(buildLine(line));
             }
@@ -74,8 +73,25 @@ public class WorldBuilder {
                 return new Tree();
             case Box:
                 return new Box();
+                //break;*/
             case Key:
                 return new Key();
+            case Heart:
+                return new Heart();
+            case BombNumberDec:
+                return new BombBonus(false,false);
+            case BombNumberInc:
+                return new BombBonus(false,true);
+            case BombRangeDec:
+                return new BombBonus(true,false);
+            case BombRangeInc:
+                return new BombBonus(true,true);
+            case DoorPrevOpened:
+                return new Door(false, true);
+            case DoorNextOpened:
+                return new Door(true, true);
+            case DoorNextClosed:
+                return new Door(true, false);
             default:
                 return null;
         }

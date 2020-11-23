@@ -68,7 +68,18 @@ public class World {
         }
         return positions;
     }
-
+    public List<Position> findPickables(){
+        List<Position> positions = new ArrayList<>();
+        List<WorldEntity> pickups = WorldEntity.listPickup();
+        for (int x = 0; x < dimension.width; x++) {
+            for (int y = 0; y < dimension.height; y++) {
+                if (pickups.contains(raw[y][x])) {
+                    positions.add(new Position(x, y));
+                }
+            }
+        }
+        return positions;
+    }
     public Optional<Princess> getPrincess() {
         return Optional.of(princess);
     }

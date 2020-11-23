@@ -8,6 +8,7 @@ public class Box extends Decor implements Movable {
 
     @Override
     public boolean canMove(Direction direction) {
+
         return true;
     }
     @Override

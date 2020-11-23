@@ -150,6 +150,7 @@ public final class GameEngine {
             gameLoop.stop();
             showMessage("Gagné", Color.BLUE);
         }
+
     }
 
     private void render() {

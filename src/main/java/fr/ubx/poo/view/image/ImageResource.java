@@ -26,6 +26,8 @@ public enum ImageResource {
     BOX("box.png"),
     PRINCESS("bomberwoman.png"),
     MONSTER("monster_down.png"),
+    DOOR_O("door_opened.png"),
+    DOOR_C("door_closed.png"),
     ;
 
     private final String FileName;
