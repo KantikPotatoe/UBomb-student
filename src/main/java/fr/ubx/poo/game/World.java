@@ -5,7 +5,9 @@
 package fr.ubx.poo.game;
 
 import fr.ubx.poo.model.bonus.Pickable;
+import fr.ubx.poo.model.decor.Box;
 import fr.ubx.poo.model.decor.Decor;
+import fr.ubx.poo.model.decor.Door;
 import fr.ubx.poo.model.go.character.Monster;
 import fr.ubx.poo.model.go.character.Princess;
 
@@ -13,13 +15,39 @@ import java.util.*;
 import java.util.function.BiConsumer;
 
 public class World {
-    private final Map<Position, Decor> grid;
-    private final WorldEntity[][] raw;
-    public final Dimension dimension;
+    private Map<Position, Decor> grid;
+    private WorldEntity[][] raw;
+    public Dimension dimension;
     private final Princess princess;
-
-    public World(WorldEntity[][] raw) {
+    private final int levels;
+    private final String worldPath;
+    private final String prefix;
+    private int actualLevel;
+    public World(WorldEntity[][] raw){
         this.raw = raw;
+        this.worldPath = "";
+        this.prefix = "";
+        this.levels = 0;
+        this.actualLevel = 0;
+        dimension = new Dimension(raw.length, raw[0].length);
+        grid = WorldBuilder.build(raw, dimension);
+        Position positionPrincess = this.findPrincess().orElse(new Position(-1, -1));
+        //this,
+        princess = new Princess();
+        /*try {
+
+        } catch (PositionNotFoundException e) {
+            System.err.println("Position not found : " + e.getLocalizedMessage());
+            throw new RuntimeException(e);
+        }*/
+
+    }
+    public World(String worldPath, String prefix, int levels) {
+        this.worldPath = worldPath;
+        this.prefix = prefix;
+        this.levels = levels;
+        this.actualLevel = 1;
+        this.raw = WorldBuilder.generateWorld(worldPath+"/"+prefix+actualLevel+".txt");
         dimension = new Dimension(raw.length, raw[0].length);
         grid = WorldBuilder.build(raw, dimension);
         Position positionPrincess = this.findPrincess().orElse(new Position(-1, -1));
@@ -80,6 +108,8 @@ public class World {
         }
         return positions;
     }
+
+
     public Optional<Princess> getPrincess() {
         return Optional.of(princess);
     }
@@ -109,6 +139,18 @@ public class World {
     }
 
     public boolean isEmpty(Position position) {
-        return grid.get(position) instanceof Pickable || grid.get(position) == null;
+        return grid.get(position) instanceof Pickable || grid.get(position) instanceof Door
+                || grid.get(position) instanceof Box || grid.get(position) == null;
+    }
+
+    public void changeLevel(boolean up) {
+        actualLevel += up ? 1 : -1;
+        this.raw = WorldBuilder.generateWorld(worldPath+"/"+prefix+actualLevel+".txt");
+        dimension = new Dimension(raw.length, raw[0].length);
+        grid = WorldBuilder.build(raw, dimension);
+    }
+
+    public int getActualLevel(){
+        return this.actualLevel;
     }
 }

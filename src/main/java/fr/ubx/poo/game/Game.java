@@ -25,15 +25,13 @@ public class Game {
     private int initPlayerLives;
     private String prefix;
     private int levels;
-    private int level;
     private final List<Monster> monsterList;
 
     public Game(String worldPath) {
         loadConfig(worldPath);
         //WorldEntity[][] thisworld = WorldBuilder.generateWorld(worldPath+"/"+prefix+"1.txt");
         monsterList = new ArrayList<>();
-        level = 1;
-        world = new World(WorldBuilder.generateWorld(worldPath+"/"+prefix+level+".txt"));
+        world = new World(worldPath, prefix, levels);
         /*world = new World(WorldBuilder.generateWorld(worldPath+"/"+prefix+"2.txt"));
         world = new World(WorldBuilder.generateWorld(worldPath+"/"+prefix+"3.txt"));*/
         this.worldPath = worldPath;
@@ -87,7 +85,5 @@ public class Game {
         return this.monsterList;
     }
 
-    public void changeLevel(){
-        //TODO : Faire la création du nouveau monde
-    }
+
 }
