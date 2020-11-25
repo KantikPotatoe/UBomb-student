@@ -79,16 +79,20 @@ public class Player extends GameObject implements Movable {
             Box box = new Box();
             this.game.getWorld().set(direction.nextPosition(nextPos), box );
         } else if (decor instanceof Door){
-            if(((Door) decor).opened) {
-                this.game.getWorld().changeLevel((((Door) decor).direction));
-            } else {
-                //TODO réduit les clés de l'inventaire
+            Door d = (Door) decor;
+            //Si elle est ouverte, on change le monde
+            if(d.isOpened()) {
+                this.game.getWorld().changeLevel(d.isUp());
+            } else if (getKeys() > 0) {
+                // Sinon, si on a des clés, alors on ouvre la porte et on change le monde
+                this.keys--;
+                d.setOpened(true);
+                this.game.getWorld().changeLevel(d.isUp());
             }
         }
         else if (decor instanceof Pickable){
             this.game.getWorld().clear(nextPos);
             pickItem((Pickable)decor);
-            //TODO Que faire ? Ajouter à un inventaire, ajouter un integer...
         }
         setPosition(nextPos);
     }

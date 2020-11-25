@@ -23,6 +23,8 @@ public class World {
     private final String worldPath;
     private final String prefix;
     private int actualLevel;
+    private boolean hasChanged;
+    //Seulement dans le cas de WorldStatic
     public World(WorldEntity[][] raw){
         this.raw = raw;
         this.worldPath = "";
@@ -32,16 +34,10 @@ public class World {
         dimension = new Dimension(raw.length, raw[0].length);
         grid = WorldBuilder.build(raw, dimension);
         Position positionPrincess = this.findPrincess().orElse(new Position(-1, -1));
-        //this,
         princess = new Princess();
-        /*try {
-
-        } catch (PositionNotFoundException e) {
-            System.err.println("Position not found : " + e.getLocalizedMessage());
-            throw new RuntimeException(e);
-        }*/
-
+        hasChanged = false;
     }
+    //Dans le cas de la récupération du fichier de configuration
     public World(String worldPath, String prefix, int levels) {
         this.worldPath = worldPath;
         this.prefix = prefix;
@@ -51,15 +47,8 @@ public class World {
         dimension = new Dimension(raw.length, raw[0].length);
         grid = WorldBuilder.build(raw, dimension);
         Position positionPrincess = this.findPrincess().orElse(new Position(-1, -1));
-        //this,
         princess = new Princess();
-        /*try {
-
-        } catch (PositionNotFoundException e) {
-            System.err.println("Position not found : " + e.getLocalizedMessage());
-            throw new RuntimeException(e);
-        }*/
-
+        hasChanged = false;
     }
 
     public Position findPlayer() throws PositionNotFoundException {
@@ -82,7 +71,6 @@ public class World {
             }
         }
         return Optional.empty();
-        //throw new PositionNotFoundException("Princess");
     }
 
     public List<Position> findMonsters() {
@@ -120,10 +108,12 @@ public class World {
 
     public void set(Position position, Decor decor) {
         grid.put(position, decor);
+        this.hasChanged = true;
     }
 
     public void clear(Position position) {
         grid.remove(position);
+        this.hasChanged = true;
     }
 
     public void forEach(BiConsumer<Position, Decor> fn) {
@@ -148,9 +138,18 @@ public class World {
         this.raw = WorldBuilder.generateWorld(worldPath+"/"+prefix+actualLevel+".txt");
         dimension = new Dimension(raw.length, raw[0].length);
         grid = WorldBuilder.build(raw, dimension);
+        this.hasChanged = true;
     }
 
     public int getActualLevel(){
         return this.actualLevel;
+    }
+
+    public boolean worldHasChanged(){
+        return this.hasChanged;
+    }
+
+    public void finishChange(){
+        this.hasChanged = false;
     }
 }

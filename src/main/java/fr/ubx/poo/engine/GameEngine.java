@@ -141,7 +141,6 @@ public final class GameEngine {
 
     private void update(long now) {
         player.update(now);
-
         if (!player.isAlive()) {
             gameLoop.stop();
             showMessage("Perdu!", Color.RED);
@@ -154,6 +153,12 @@ public final class GameEngine {
     }
 
     private void render() {
+        if(game.getWorld().worldHasChanged()) {
+            sprites.forEach(Sprite::remove);
+            sprites.clear();
+            game.getWorld().forEach((pos, d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
+            game.getWorld().finishChange();
+        }
         sprites.forEach(Sprite::render);
         // last rendering to have player in the foreground
         spritePlayer.render();
