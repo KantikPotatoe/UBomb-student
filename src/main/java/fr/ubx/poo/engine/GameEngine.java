@@ -116,6 +116,12 @@ public final class GameEngine {
         if (input.isMoveUp()) {
             player.requestMove(Direction.N);
         }
+        if (input.isBomb()) {
+            //TODO Drop bomb
+        }
+        if (input.isKey()) {
+            player.openDoor();
+        }
         input.clear();
     }
 
@@ -140,16 +146,6 @@ public final class GameEngine {
 
 
     private void update(long now) {
-        if(game.getWorld().isNewWorld()){
-//            System.out.println(sprites.size());
-            sprites.forEach(Sprite::remove);
-            sprites.clear();
-            initialize(stage, game);
-            System.out.println(sprites.size());
-
-            game.getWorld().finishNewWorld();
-            render();
-        }
         player.update(now);
         if (!player.isAlive()) {
             gameLoop.stop();
@@ -169,6 +165,17 @@ public final class GameEngine {
             sprites.clear();
             game.getWorld().forEach((pos, d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
             game.getWorld().finishChange();
+        }
+        if(game.getWorld().isNewWorld()){
+            monsterSprites.forEach(Sprite::remove);
+            monsterSprites.clear();
+            sprites.forEach(Sprite::remove);
+            sprites.clear();
+            initialize(stage, game);
+            System.out.println(sprites.size());
+
+            game.getWorld().finishNewWorld();
+
         }
         sprites.forEach(Sprite::render);
         // last rendering to have player in the foreground

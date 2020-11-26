@@ -1,5 +1,8 @@
 package fr.ubx.poo.model.bonus;
 
+import fr.ubx.poo.game.WorldEntity;
+import fr.ubx.poo.view.image.ImageResource;
+
 public class BombBonus extends Pickable {
     // Définit si le bonus est en range ou non (sinon, alors augmentation du nombre)
     private boolean range;
@@ -19,6 +22,22 @@ public class BombBonus extends Pickable {
 
     public boolean isUp() {
         return up;
+    }
+
+    public ImageResource getEntity(){
+        if(up){
+            if(range){
+                return ImageResource.BOMBRUP;
+            } else {
+                return ImageResource.BOMBNBUP;
+            }
+        } else {
+            if(range){
+                return ImageResource.BOMBRDOWN;
+            } else {
+                return ImageResource.BOMBNBDOWN;
+            }
+        }
     }
 
 }

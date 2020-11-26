@@ -28,8 +28,7 @@ public final class SpriteFactory {
         if (decor instanceof Box)
             return new SpriteDecor(layer, factory.get(BOX), position);
         if(decor instanceof BombBonus)
-            //TODO : Voir si on fait une classe pour les bonus puis une classe pour les bombes
-            return new SpriteDecor(layer,factory.get(BANNER_BOMB),position);
+            return new SpriteDecor(layer,factory.get(((BombBonus) decor).getEntity()),position);
         if (decor instanceof Door)
             return new SpriteDecor(layer, factory.get(((Door) decor).getDoorEntity()), position);
         if (decor instanceof Heart)

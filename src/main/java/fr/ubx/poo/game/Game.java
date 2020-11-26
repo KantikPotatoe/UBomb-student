@@ -32,8 +32,7 @@ public class Game {
         //WorldEntity[][] thisworld = WorldBuilder.generateWorld(worldPath+"/"+prefix+"1.txt");
         monsterList = new ArrayList<>();
         world = new World(worldPath, prefix, levels);
-        /*world = new World(WorldBuilder.generateWorld(worldPath+"/"+prefix+"2.txt"));
-        world = new World(WorldBuilder.generateWorld(worldPath+"/"+prefix+"3.txt"));*/
+        //world = new WorldStatic();
         this.worldPath = worldPath;
 
         Position positionPlayer = null;

@@ -124,7 +124,7 @@ public class World {
     }
 
     public boolean isDoor(Position position){
-        return grid.get(position) instanceof Door ;
+        return grid.get(position) instanceof Door &&((Door) grid.get(position)).isOpened();
     }
     public boolean isPickable(Position position){
         return grid.get(position) instanceof Pickable;

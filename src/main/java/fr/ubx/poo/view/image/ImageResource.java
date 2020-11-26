@@ -28,6 +28,11 @@ public enum ImageResource {
     MONSTER("monster_down.png"),
     DOOR_O("door_opened.png"),
     DOOR_C("door_closed.png"),
+    BOMBRUP("bonus_bomb_range_inc.png"),
+    BOMBRDOWN("bonus_bomb_range_dec.png"),
+    BOMBNBUP("bonus_bomb_nb_inc.png"),
+    BOMBNBDOWN("bonus_bomb_nb_dec.png"),
+
     ;
 
     private final String FileName;
