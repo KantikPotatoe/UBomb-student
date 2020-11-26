@@ -54,14 +54,4 @@ public enum WorldEntity {
         return ""+code;
     }
 
-    public static List<WorldEntity> listPickup(){
-        List<WorldEntity> pickups = new ArrayList<>();
-        pickups.add(Heart);
-        pickups.add(Key);
-        pickups.add(BombRangeInc);
-        pickups.add(BombRangeDec);
-        pickups.add(BombNumberInc);
-        pickups.add(BombNumberDec);
-        return pickups;
-    }
 }

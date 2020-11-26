@@ -28,8 +28,10 @@ public class Player extends GameObject implements Movable {
     private int sizeBombs;
     private int keys;
     private int bombsNumber;
+    private World world;
     public Player(Game game, Position position) {
         super(game, position);
+        this.world = this.game.getWorld();
         this.direction = Direction.S;
         this.lives = game.getInitPlayerLives();
         this.keys = 0;
@@ -66,32 +68,37 @@ public class Player extends GameObject implements Movable {
 
     @Override
     public boolean canMove(Direction direction) {
-        return this.game.getWorld().isEmpty(direction.nextPosition(getPosition())) &&
-                this.game.getWorld().isInside(direction.nextPosition(getPosition()));
+        Position nextPos = direction.nextPosition(getPosition());
+        boolean can = world.isDoor(nextPos) || world.isPickable(nextPos) || world.isEmpty(nextPos);
+        return (can || world.isBoxMovable(nextPos, direction)) &&
+                world.isInside(nextPos);
 
     }
 
     public void doMove(Direction direction) {
         Position nextPos = direction.nextPosition(getPosition());
-        Decor decor = this.game.getWorld().get(nextPos);
+        Decor decor = world.get(nextPos);
         if(decor instanceof Box){
-            this.game.getWorld().clear(nextPos);
-            Box box = new Box();
-            this.game.getWorld().set(direction.nextPosition(nextPos), box );
+                world.clear(nextPos);
+                Box box = new Box();
+                world.set(direction.nextPosition(nextPos), box);
         } else if (decor instanceof Door){
+         //TODO Changer tout ça : la porte ne peut être ouverte qu'en appuyant sur ENTREE avec une clé, à côté de la porte en la regardant.
             Door d = (Door) decor;
             //Si elle est ouverte, on change le monde
             if(d.isOpened()) {
-                this.game.getWorld().changeLevel(d.isUp());
+                world.changeLevel(d.isUp());
             } else if (getKeys() > 0) {
                 // Sinon, si on a des clés, alors on ouvre la porte et on change le monde
                 this.keys--;
-                d.setOpened(true);
-                this.game.getWorld().changeLevel(d.isUp());
+
+                //d.setOpened(true);
+                world.clear(nextPos);
+                world.set(nextPos, new Door(d.isUp(), true));
             }
         }
         else if (decor instanceof Pickable){
-            this.game.getWorld().clear(nextPos);
+            world.clear(nextPos);
             pickItem((Pickable)decor);
         }
         setPosition(nextPos);
@@ -101,10 +108,10 @@ public class Player extends GameObject implements Movable {
         if (moveRequested) {
             if (canMove(direction)) {
                 doMove(direction);
-                if(this.game.getWorld().findMonsters().contains(this.getPosition())){
+                if(world.findMonsters().contains(this.getPosition())){
                     this.lives--;
-                } else if  (this.game.getWorld().findPrincess().isPresent() &&
-                        this.game.getWorld().findPrincess().get().equals(this.getPosition())) {
+                } else if  (world.findPrincess().isPresent() &&
+                        world.findPrincess().get().equals(this.getPosition())) {
                     this.winner = true;
                 }
                 if(this.getLives() <= 0){

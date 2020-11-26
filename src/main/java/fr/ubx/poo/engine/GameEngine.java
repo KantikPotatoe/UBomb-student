@@ -140,6 +140,16 @@ public final class GameEngine {
 
 
     private void update(long now) {
+        if(game.getWorld().isNewWorld()){
+//            System.out.println(sprites.size());
+            sprites.forEach(Sprite::remove);
+            sprites.clear();
+            initialize(stage, game);
+            System.out.println(sprites.size());
+
+            game.getWorld().finishNewWorld();
+            render();
+        }
         player.update(now);
         if (!player.isAlive()) {
             gameLoop.stop();
@@ -149,6 +159,7 @@ public final class GameEngine {
             gameLoop.stop();
             showMessage("Gagné", Color.BLUE);
         }
+
 
     }
 

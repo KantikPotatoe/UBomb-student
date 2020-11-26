@@ -26,19 +26,23 @@ public class WorldBuilder {
             Scanner levelFile = new Scanner(new File(path));
             String line;
             while (levelFile.hasNext() ) {
+
                 line = levelFile.next();
+                System.out.println(line);
                 listEntities.add(buildLine(line));
             }
             levelFile.close();
         } catch (Exception e){
             System.out.println(e);
         }
-        WorldEntity[][] world = new WorldEntity[listEntities.get(0).length][listEntities.size()];
+
+        WorldEntity[][] world = new WorldEntity[listEntities.size()][listEntities.get(0).length];
         for(WorldEntity[] lineE : listEntities){
             world[listEntities.indexOf(lineE)] = lineE;
         }
         return world;
     }
+
     public static WorldEntity[] buildLine(String line){
         WorldEntity[] worldLine = new WorldEntity[line.length()];
         int i = 0;
