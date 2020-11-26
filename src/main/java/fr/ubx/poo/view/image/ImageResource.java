@@ -32,7 +32,11 @@ public enum ImageResource {
     BOMBRDOWN("bonus_bomb_range_dec.png"),
     BOMBNBUP("bonus_bomb_nb_inc.png"),
     BOMBNBDOWN("bonus_bomb_nb_dec.png"),
-
+    BOMB1("bomb1.png"),
+    BOMB2("bomb2.png"),
+    BOMB3("bomb3.png"),
+    BOMB4("bomb4.png"),
+    EXPLOSION("explosion.png"),
     ;
 
     private final String FileName;

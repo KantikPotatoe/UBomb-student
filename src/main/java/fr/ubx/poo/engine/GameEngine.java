@@ -5,6 +5,7 @@
 package fr.ubx.poo.engine;
 
 import fr.ubx.poo.game.Direction;
+import fr.ubx.poo.model.go.character.Bomb;
 import fr.ubx.poo.model.go.character.Monster;
 import fr.ubx.poo.model.go.character.Princess;
 import fr.ubx.poo.view.sprite.Sprite;
@@ -25,6 +26,7 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public final class GameEngine {
@@ -34,7 +36,6 @@ public final class GameEngine {
     private final Game game;
     private final Player player;
     //private final Princess princess;
-    private List<Monster> monsters = new ArrayList<>();
     private final List<Sprite> sprites = new ArrayList<>();
     private final List<Sprite> monsterSprites = new ArrayList<>();
     private StatusBar statusBar;
@@ -43,14 +44,18 @@ public final class GameEngine {
     private Stage stage;
     private Sprite spritePlayer;
     private Sprite spritePrincess;
-
+    private List<Sprite> bombSprites = new ArrayList<>();
+    private List<Bomb> bombs = new ArrayList<>();
+    private long i;
+    private int j;
     public GameEngine(final String windowTitle, Game game, final Stage stage) {
         this.windowTitle = windowTitle;
         this.game = game;
         this.player = game.getPlayer();
 //        this.princess = game.getPrincess();
-        this.monsters = game.getMonsterList();
         initialize(stage, game);
+        i= 0;
+        j = 0;
         buildAndSetGameLoop();
     }
 
@@ -89,6 +94,14 @@ public final class GameEngine {
                 processInput(now);
 
                 // Do actions
+                i++;
+                if(i%60==0){
+                    j++;
+                    System.out.println(j);
+                    bombs.forEach(bomb -> bomb.dropTime(1));
+                    bombs = bombs.stream().filter(bomb -> bomb.getLifetime() >= 0).
+                            collect(Collectors.toList());
+                }
                 update(now);
 
                 // Graphic update
@@ -117,6 +130,9 @@ public final class GameEngine {
             player.requestMove(Direction.N);
         }
         if (input.isBomb()) {
+            Bomb bomb = new Bomb(game, player.getPosition(), player.getSizeBombs());
+            this.bombSprites.add(SpriteFactory.createBomb(layer,bomb));
+            this.bombs.add(bomb);
             //TODO Drop bomb
         }
         if (input.isKey()) {
@@ -177,11 +193,16 @@ public final class GameEngine {
             game.getWorld().finishNewWorld();
 
         }
+
         sprites.forEach(Sprite::render);
         // last rendering to have player in the foreground
         spritePlayer.render();
         //spritePrincess.render();
         monsterSprites.forEach(Sprite::render);
+        bombSprites.forEach(Sprite::remove);
+        bombSprites.clear();
+        bombs.forEach(bomb -> bombSprites.add(SpriteFactory.createBomb(layer,bomb)));
+        bombSprites.forEach(Sprite::render);
     }
 
     public void start() {

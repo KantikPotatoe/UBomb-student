@@ -80,8 +80,7 @@ public class Player extends GameObject implements Movable {
         Decor decor = world.get(nextPos);
         if(decor instanceof Box){
                 world.clear(nextPos);
-                Box box = new Box();
-                world.set(direction.nextPosition(nextPos), box);
+                world.set(direction.nextPosition(nextPos), decor);
         } else if (decor instanceof Door){
             world.changeLevel(((Door) decor).isUp());
         }

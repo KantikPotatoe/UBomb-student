@@ -9,6 +9,7 @@ import static fr.ubx.poo.view.image.ImageResource.*;
 import fr.ubx.poo.game.Position;
 import fr.ubx.poo.model.bonus.*;
 import fr.ubx.poo.model.decor.*;
+import fr.ubx.poo.model.go.character.Bomb;
 import fr.ubx.poo.model.go.character.Monster;
 import fr.ubx.poo.model.go.character.Player;
 import fr.ubx.poo.model.go.character.Princess;
@@ -48,6 +49,10 @@ public final class SpriteFactory {
         ImageFactory factory = ImageFactory.getInstance();
         return new SpritePrincess(layer, factory.get(PRINCESS), princess);
     }*/
+    public static Sprite createBomb(Pane layer, Bomb bomb){
+        ImageFactory factory = ImageFactory.getInstance();
+        return new SpriteMonster(layer, factory.get(bomb.getImageBomb()), bomb);
+    }
 
     public static Sprite createMonster(Pane layer, Monster monster) {
         ImageFactory factory = ImageFactory.getInstance();
