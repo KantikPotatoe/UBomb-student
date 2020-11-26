@@ -97,8 +97,8 @@ public final class GameEngine {
                 i++;
                 if(i%60==0){
                     j++;
-                    System.out.println(j);
                     bombs.forEach(bomb -> bomb.dropTime(1));
+                    bombs.stream().filter(bomb -> bomb.getLifetime() < 0).forEach(Bomb::destroySides);
                     bombs = bombs.stream().filter(bomb -> bomb.getLifetime() >= 0).
                             collect(Collectors.toList());
                 }
@@ -129,11 +129,11 @@ public final class GameEngine {
         if (input.isMoveUp()) {
             player.requestMove(Direction.N);
         }
-        if (input.isBomb()) {
+        if (input.isBomb() && player.getBombsNumber() > 0) {
             Bomb bomb = new Bomb(game, player.getPosition(), player.getSizeBombs());
             this.bombSprites.add(SpriteFactory.createBomb(layer,bomb));
             this.bombs.add(bomb);
-            //TODO Drop bomb
+
         }
         if (input.isKey()) {
             player.openDoor();
@@ -181,6 +181,9 @@ public final class GameEngine {
             sprites.clear();
             game.getWorld().forEach((pos, d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
             game.getWorld().finishChange();
+            monsterSprites.forEach(Sprite::remove);
+            monsterSprites.clear();
+            game.getMonsterList().stream().map(monster -> SpriteFactory.createMonster(layer, monster)).forEach(monsterSprites::add);
         }
         if(game.getWorld().isNewWorld()){
             monsterSprites.forEach(Sprite::remove);

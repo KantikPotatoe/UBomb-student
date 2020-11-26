@@ -39,6 +39,10 @@ public class Player extends GameObject implements Movable {
         this.bombsNumber = 3;
     }
 
+    public void decreaseLife() {
+        this.lives--;
+    }
+
     public int getLives() {
         return lives;
     }
@@ -123,8 +127,6 @@ public class Player extends GameObject implements Movable {
         if (getKeys() > 0 && front instanceof Door) {
             // Sinon, si on a des clés, alors on ouvre la porte et on change le monde
             this.keys--;
-
-            //d.setOpened(true);
             world.clear(nextPos);
             world.set(nextPos, new Door(((Door)front).isUp(), true));
         }

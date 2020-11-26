@@ -37,14 +37,10 @@ public class Game {
 
         Position positionPlayer = null;
         Position positionPrincess = null;
-        try {
-            positionPlayer = world.findPlayer();
-            player = new Player(this, positionPlayer);
 
-        } catch (PositionNotFoundException e) {
-            System.err.println("Position not found : " + e.getLocalizedMessage());
-            throw new RuntimeException(e);
-        }
+        positionPlayer = world.findPlayer().orElseThrow();
+        player = new Player(this, positionPlayer);
+
         loadMonsters();
      }
 

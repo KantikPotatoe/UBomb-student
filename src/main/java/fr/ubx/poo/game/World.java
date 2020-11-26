@@ -55,15 +55,16 @@ public class World {
         newWorld = false;
     }
 
-    public Position findPlayer() throws PositionNotFoundException {
+    public Optional<Position> findPlayer() /*throws PositionNotFoundException */{
         for (int x = 0; x < dimension.width; x++) {
             for (int y = 0; y < dimension.height; y++) {
                 if (raw[y][x] == WorldEntity.Player || raw[y][x] == WorldEntity.DoorPrevOpened) {
-                    return new Position(x, y);
+                    return Optional.of(new Position(x, y));
                 }
             }
         }
-        throw new PositionNotFoundException("Player");
+        return Optional.empty();
+       // throw new PositionNotFoundException("Player");
     }
 
     public Optional<Position> findPrincess()/* throws PositionNotFoundException*/ {
