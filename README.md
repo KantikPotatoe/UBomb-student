@@ -25,7 +25,7 @@ Chaque monde est représenté par une carte (rectangulaire) composée de cellule
     mondes ;
 -   des clés pour débloquer les portes fermées ;
 -   des bonus ou des malus qu'il est possible de ramasser.
-
+                                                                
 ![Bombeirb](img/ubomb.png)
 
 ## Prise en main
@@ -47,13 +47,13 @@ Ajouter l'affichage de tous les éléments (caisses, bonus, clés...) ainsi que 
 Le joueur peut marcher sur une case où se trouve un bonus, une clé, ou un autre personnage. Faire en sorte que le joueur perde une vie lorsqu'il se trouve sur la même case qu'un monstre.
 S’il atteint la princesse, la partie se termine par une victoire.
 Si ses points de vie tombent à 0, la partie se termine par une défaite.
-
+                                                                        Done
 ## Gestion du panneau d’informations
 
 Le panneau d’information doit afficher le nombre de vies, le nombre de bombes et leur portée, le nombre de clés dans l’inventaire et le numéro de niveau courant.
-
+                                                                        Done
 ## Gestion des mondes
-
+        
 Le dossier de ressources `sample` contient les cartes correspondant à trois niveaux. La configuration du jeux est fournie dans le fichier de propriété `config.properties`. Nous définissons les conventions suivantes :
 
 -   les cartes sont stockées sous forme de fichiers texte afin de
@@ -67,7 +67,7 @@ Le dossier de ressources `sample` contient les cartes correspondant à trois niv
 défini dans le fichier `WorldEntity.java`.
 
 Modifier le code dans le package classe `game` pour que le monde du jeu soit chargé depuis les fichiers du dossier `world`.
-
+                                                                        Done
 ## Gestion des portes
 
 Lorsque le joueur arrive sur la case d’une porte ouverte, il passe
@@ -77,11 +77,11 @@ correspondant. Seul le niveau *0* (on ne peut pas passer au niveau inférieur) e
 clés de son inventaire. Pour ce faire, il doit appuyer sur la touche `[ENTER]` lorsqu'il est à côté de la porte à ouvrir et qu'il regarde la porte. Une fois utilisée, la clé disparaît de
 l’inventaire. Chaque clé peut ouvrir indifféremment n’importe quelle
 porte fermée. Une fois qu'une porte est ouverte, elle le reste pour toute la partie du jeu.
-
+                                                Reste la porte à laisser ouverte et le passage au monde suivant.
 ## Déplacement des caisses
 
  Les caisses doivent pouvoir être déplacées par le joueur si rien ne gêne dans le sens de la poussée. Le joueur ne peut déplacer qu'une seule caisse à la fois. Si un bonus se trouve dans la direction déplacement d’une caisse, la caisse reste bloquée. Le joueur ne peut pas déplacer deux caisses à la fois. 
-
+                                                                        Done
 
 ## Gestion des bombes
 
@@ -97,10 +97,10 @@ Enfin, si un joueur ou un monstre est sur une cellule touchée par une explosion
 perd une vie. Les explosions n’ont aucun effet sur les portes et les
 clés. Lorsque une bombe explose, une nouvelle bombe est ajoutée à
 l’inventaire du joueur. 
-
+                                                                        Done
 Si le joueur pose une bombe et change ensuite de niveau en franchissant une porte, la bombe doit tout de même exploser au bout de 4 secondes. Les éléments de décor détruits sur un niveau doivent le rester pendant toute la durée de la partie.
 
-
+                                                                        
 ## Gestion des bonus et malus
 
 Le joueur ramasse automatiquement un bonus lorsqu'il marche sur la case qui le contient. Les monstrent peuvent marcher sur les cases des bonus mais ne peuvent pas les ramasser. Il existe 5 bonus différents :
@@ -113,13 +113,13 @@ Bonus | Effet
 | ![range-](src/main/resources/images/bonus_bomb_range_inc.png) | Diminue la portée des bombes de une unité. La portée minimale est de un. La modification de portée n'affecte pas les bombes déjà posées. |
 | ![live](src/main/resources/images/heart.png) | Ajoute une vie. |
 
-
+                                                                        Done
 ## Gestion des vies
 
 Le nombre initial de vies du joueur est défini dans le fichier de configuration. Il peut en perdre s’il
 se trouve sur une case à portée de l’explosion d’une bombe ou s'il croise un monstre. Si le joueur
 n’a plus de vie, la partie se termine. Le joueur bénéficie alors d’une temporisation d'une seconde pendant laquelle il est invulnérable.
-
+                                                                        Done
 ## Gestion des monstres
 
 Les déplacements des monstres sont
@@ -127,7 +127,7 @@ entièrement aléatoires. Une collision avec un monstre déclenche la perte
 d’une vie. Commencer par ajouter un seul monstre à la fois, puis augmenter le
 nombre de monstres. Les monstres ne peuvent pas ramasser les bonus qui se trouvent sur le
 sol. Les monstres ont peur des portes et ne peuvent pas les franchir.
-
+                                                                        Done
 **Pour aller plus loin.** Faire en sorte que la vitesse de déplacement des monstres soit faible dans les premiers niveaux et augmente plus on se rapproche de la
 princesse. Ajouter ensuite un module d’intelligence artificielle pour que les monstres des derniers niveaux se dirigent vers le joueur et non plus de manière aléatoire.
 
@@ -136,3 +136,4 @@ princesse. Ajouter ensuite un module d’intelligence artificielle pour que les 
 La partie est finie lorsque le joueur arrive sur la case de la
 princesse. Les monstres ne veulent pas de mal à la princesse mais feront
 tout pour la garder prisonnière. La touche `[ESCAPE]` permet de quitter la partie à tout moment.
+                                                                        Done
