@@ -98,9 +98,14 @@ public final class GameEngine {
                 if(i%60==0){
                     j++;
                     bombs.forEach(bomb -> bomb.dropTime(1));
-                    bombs.stream().filter(bomb -> bomb.getLifetime() < 0).forEach(Bomb::destroySides);
+                    bombs.stream().filter(bomb -> bomb.getLifetime() < 0).forEach(bomb -> {
+                        player.incDecBomb(1);
+                        bomb.destroySides();
+                    });
                     bombs = bombs.stream().filter(bomb -> bomb.getLifetime() >= 0).
                             collect(Collectors.toList());
+                    //TODO Faire en sorte que le raw change avec la position du monstre.
+                    game.getMonsterList().forEach(monster -> monster.doMove(Direction.random()));
                 }
                 update(now);
 
@@ -133,7 +138,7 @@ public final class GameEngine {
             Bomb bomb = new Bomb(game, player.getPosition(), player.getSizeBombs());
             this.bombSprites.add(SpriteFactory.createBomb(layer,bomb));
             this.bombs.add(bomb);
-
+            player.incDecBomb(-1);
         }
         if (input.isKey()) {
             player.openDoor();

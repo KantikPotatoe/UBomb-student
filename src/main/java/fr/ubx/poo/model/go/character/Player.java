@@ -36,7 +36,7 @@ public class Player extends GameObject implements Movable {
         this.lives = game.getInitPlayerLives();
         this.keys = 0;
         this.sizeBombs = 1;
-        this.bombsNumber = 3;
+        this.bombsNumber = 1;
     }
 
     public void decreaseLife() {
@@ -139,10 +139,15 @@ public class Player extends GameObject implements Movable {
         else if (item instanceof BombBonus){
             BombBonus b = (BombBonus) item;
             if (b.isRange()){
-                this.sizeBombs += b.isUp() ? 1: -1;
+                this.sizeBombs += b.isUp() ? 1: (this.sizeBombs == 1 ? 0 : -1);
             } else {
                 this.bombsNumber += b.isUp() ? 1: -1;
             }
         }
+    }
+
+
+    public void incDecBomb(int bombsNumber){
+        this.bombsNumber+= bombsNumber;
     }
 }

@@ -44,7 +44,7 @@ public class Bomb extends GameObject {
             for(int i = 1; i <= this.range; i++){
                 Position nextPos = d.nextPosition(this.getPosition(),i);
                 if (world.get(nextPos) instanceof Box ||
-                world.get(nextPos) instanceof Pickable){
+                        (world.get(nextPos) instanceof Pickable && !(world.get(nextPos) instanceof Key ))){
                     world.clear(nextPos);
                     break;
                 }
