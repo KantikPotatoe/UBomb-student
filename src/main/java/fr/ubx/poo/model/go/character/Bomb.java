@@ -12,7 +12,7 @@ import fr.ubx.poo.model.decor.*;
 
 public class Bomb extends GameObject {
     private int lifetime;
-    private int range;
+    private final int range;
     public Bomb(Game game, Position position, int range) {
         super(game, position);
         this.range = range;
@@ -33,13 +33,13 @@ public class Bomb extends GameObject {
         return this.lifetime;
     }
 
-    public void dropTime(long now){
-        this.lifetime -= now;
+    public void dropTime(){
+        this.lifetime --;
     }
 
-    public void destroySides(){
+    public void destroySides(int w){
         //TODO Faire les animations
-        World world = game.getWorld();
+        World world = game.worldNumber(w);
         for(Direction d : Direction.values()){
             for(int i = 1; i <= this.range; i++){
                 Position nextPos = d.nextPosition(this.getPosition(),i);

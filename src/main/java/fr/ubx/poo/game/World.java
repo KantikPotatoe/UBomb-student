@@ -15,40 +15,37 @@ import java.util.*;
 import java.util.function.BiConsumer;
 
 public class World {
-    private Map<Position, Decor> grid;
-    private WorldEntity[][] raw;
+    private final Map<Position, Decor> grid;
+    private final WorldEntity[][] raw;
     public Dimension dimension;
     private final Princess princess;
     private boolean hasChanged;
-    private boolean newWorld;
-    private List<Monster> monsters;
-    //Seulement dans le cas de WorldStatic
+    private final boolean newWorld;
+    private final List<Monster> monsters;
+
     public World(WorldEntity[][] raw){
         this.raw = raw;
         dimension = new Dimension(raw.length, raw[0].length);
         grid = WorldBuilder.build(raw, dimension);
-        Position positionPrincess = this.findPrincess().orElse(new Position(-1, -1));
         princess = new Princess();
         monsters = new ArrayList<>();
         hasChanged = false;
         newWorld = false;
     }
-    //Dans le cas de la récupération du fichier de configuration
 
 
-    public Optional<Position> findPlayer() /*throws PositionNotFoundException */{
+    public Optional<Position> findPlayer() {
         for (int x = 0; x < dimension.width; x++) {
             for (int y = 0; y < dimension.height; y++) {
-                if (raw[y][x] == WorldEntity.Player || raw[y][x] == WorldEntity.DoorPrevOpened) {
+                if (  raw[y][x] == WorldEntity.Player || raw[y][x] == WorldEntity.DoorPrevOpened ) {
                     return Optional.of(new Position(x, y));
                 }
             }
         }
         return Optional.empty();
-       // throw new PositionNotFoundException("Player");
     }
 
-    public Optional<Position> findPrincess()/* throws PositionNotFoundException*/ {
+    public Optional<Position> findPrincess(){
         for (int x = 0; x < dimension.width; x++) {
             for (int y = 0; y < dimension.height; y++) {
                 if (raw[y][x] == WorldEntity.Princess) {
@@ -109,6 +106,7 @@ public class World {
     public boolean isDoor(Position position){
         return grid.get(position) instanceof Door &&((Door) grid.get(position)).isOpened();
     }
+
     public boolean isPickable(Position position){
         return grid.get(position) instanceof Pickable;
     }
@@ -129,5 +127,6 @@ public class World {
     public void askChange() {
         this.hasChanged = true;
     }
+
 
   }

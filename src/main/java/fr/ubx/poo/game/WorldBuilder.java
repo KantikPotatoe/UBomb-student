@@ -9,6 +9,7 @@ import fr.ubx.poo.model.bonus.*;
 import fr.ubx.poo.model.decor.*;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 
@@ -20,15 +21,13 @@ public class WorldBuilder {
 
     }
 
-    public static WorldEntity[][] generateWorld(String path){
+    public static WorldEntity[][] generateWorld(String path) {
         List<WorldEntity[]> listEntities = new ArrayList<>();
         try {
             Scanner levelFile = new Scanner(new File(path));
             String line;
             while (levelFile.hasNext() ) {
-
                 line = levelFile.next();
-                System.out.println(line);
                 listEntities.add(buildLine(line));
             }
             levelFile.close();
@@ -70,34 +69,20 @@ public class WorldBuilder {
     }
 
     private static Decor processEntity(WorldEntity entity) {
-        switch (entity) {
-            case Stone:
-                return new Stone();
-            case Tree:
-                return new Tree();
-            case Box:
-                return new Box();
-                //break;*/
-            case Key:
-                return new Key();
-            case Heart:
-                return new Heart();
-            case BombNumberDec:
-                return new BombBonus(false,false);
-            case BombNumberInc:
-                return new BombBonus(false,true);
-            case BombRangeDec:
-                return new BombBonus(true,false);
-            case BombRangeInc:
-                return new BombBonus(true,true);
-            case DoorPrevOpened:
-                return new Door(false, true);
-            case DoorNextOpened:
-                return new Door(true, true);
-            case DoorNextClosed:
-                return new Door(true, false);
-            default:
-                return null;
-        }
+        return switch (entity) {
+            case Stone -> new Stone();
+            case Tree -> new Tree();
+            case Box -> new Box();
+            case Key -> new Key();
+            case Heart -> new Heart();
+            case BombNumberDec -> new BombBonus(false, false);
+            case BombNumberInc -> new BombBonus(false, true);
+            case BombRangeDec -> new BombBonus(true, false);
+            case BombRangeInc -> new BombBonus(true, true);
+            case DoorPrevOpened -> new Door(false, true);
+            case DoorNextOpened -> new Door(true, true);
+            case DoorNextClosed -> new Door(true, false);
+            default -> null;
+        };
     }
 }

@@ -19,9 +19,8 @@ import fr.ubx.poo.model.go.character.Princess;
 
 public class Game {
 
-    private final World world[];
+    private final World[] world;
     private final Player player;
-    private final String worldPath;
     private int initPlayerLives;
     private String prefix;
     private int levels;
@@ -30,21 +29,19 @@ public class Game {
     private boolean newWorld;
 
     public Game(String worldPath) {
-        this.worldPath = worldPath;
         loadConfig(worldPath);
         monsterList = new ArrayList<>();
         world = new World[this.levels];
         this.actualLevel = 0;
-        for (int i = actualLevel; i < levels ; i++){
-            WorldEntity[][] raw = WorldBuilder.generateWorld(worldPath+"/"+prefix+(i+1)+".txt");
+        for (int i = actualLevel; i < levels; i++) {
+            WorldEntity[][] raw = WorldBuilder.generateWorld(worldPath + "/" + prefix + (i + 1) + ".txt");
             world[i] = new World(raw);
         }
         newWorld = false;
 
-        Position positionPlayer = null;
         Position positionPrincess = null;
 
-        positionPlayer = findPlayer();
+        Position positionPlayer = findPlayer();
         player = new Player(this, positionPlayer);
 
         loadMonsters();
@@ -112,4 +109,11 @@ public class Game {
         return this.newWorld;
     }
 
+    public int getLevels() {
+        return levels;
+    }
+
+    public World worldNumber (int n){
+        return world[n];
+    }
 }
