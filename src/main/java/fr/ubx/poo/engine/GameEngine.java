@@ -104,7 +104,6 @@ public final class GameEngine {
                     });
                     bombs = bombs.stream().filter(bomb -> bomb.getLifetime() >= 0).
                             collect(Collectors.toList());
-                    //TODO Faire en sorte que le raw change avec la position du monstre.
                     game.getMonsterList().forEach(monster -> monster.doMove(Direction.random()));
                 }
                 update(now);
@@ -181,6 +180,21 @@ public final class GameEngine {
     }
 
     private void render() {
+        if(game.isNewWorld()){
+            this.player.setPosition(game.findPlayer());
+
+            game.finishNewWorld();
+           // game.loadMonsters();
+            monsterSprites.forEach(Sprite::remove);
+            monsterSprites.clear();
+            sprites.forEach(Sprite::remove);
+            sprites.clear();
+            spritePlayer.remove();
+            initialize(stage, game);
+            System.out.println(sprites.size());
+
+
+        }
         if(game.getWorld().worldHasChanged()) {
             sprites.forEach(Sprite::remove);
             sprites.clear();
@@ -190,17 +204,7 @@ public final class GameEngine {
             monsterSprites.clear();
             game.getMonsterList().stream().map(monster -> SpriteFactory.createMonster(layer, monster)).forEach(monsterSprites::add);
         }
-        if(game.getWorld().isNewWorld()){
-            monsterSprites.forEach(Sprite::remove);
-            monsterSprites.clear();
-            sprites.forEach(Sprite::remove);
-            sprites.clear();
-            initialize(stage, game);
-            System.out.println(sprites.size());
 
-            game.getWorld().finishNewWorld();
-
-        }
 
         sprites.forEach(Sprite::render);
         // last rendering to have player in the foreground

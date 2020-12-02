@@ -86,7 +86,7 @@ public class Player extends GameObject implements Movable {
                 world.clear(nextPos);
                 world.set(direction.nextPosition(nextPos), decor);
         } else if (decor instanceof Door){
-            world.changeLevel(((Door) decor).isUp());
+            game.changeLevel(((Door) decor).isUp());
         }
         else if (decor instanceof Pickable){
             world.clear(nextPos);
@@ -99,9 +99,10 @@ public class Player extends GameObject implements Movable {
         if (moveRequested) {
             if (canMove(direction)) {
                 doMove(direction);
-                if(world.findMonsters().contains(this.getPosition())){
+                if(game.getMonsterList().stream().anyMatch
+                        (monster -> monster.getPosition().equals(this.getPosition()))){
                     this.lives--;
-                } else if  (world.findPrincess().isPresent() &&
+                } else if (world.findPrincess().isPresent() &&
                         world.findPrincess().get().equals(this.getPosition())) {
                     this.winner = true;
                 }
@@ -146,7 +147,9 @@ public class Player extends GameObject implements Movable {
         }
     }
 
-
+    public void changeWorld(){
+        this.world = game.getWorld();
+    }
     public void incDecBomb(int bombsNumber){
         this.bombsNumber+= bombsNumber;
     }

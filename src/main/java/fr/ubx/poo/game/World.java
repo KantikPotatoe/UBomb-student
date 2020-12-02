@@ -19,41 +19,22 @@ public class World {
     private WorldEntity[][] raw;
     public Dimension dimension;
     private final Princess princess;
-    private final int levels;
-    private final String worldPath;
-    private final String prefix;
-    private int actualLevel;
     private boolean hasChanged;
     private boolean newWorld;
+    private List<Monster> monsters;
     //Seulement dans le cas de WorldStatic
     public World(WorldEntity[][] raw){
         this.raw = raw;
-        this.worldPath = "";
-        this.prefix = "";
-        this.levels = 0;
-        this.actualLevel = 0;
         dimension = new Dimension(raw.length, raw[0].length);
         grid = WorldBuilder.build(raw, dimension);
         Position positionPrincess = this.findPrincess().orElse(new Position(-1, -1));
         princess = new Princess();
+        monsters = new ArrayList<>();
         hasChanged = false;
         newWorld = false;
     }
     //Dans le cas de la récupération du fichier de configuration
-    public World(String worldPath, String prefix, int levels) {
-        this.worldPath = worldPath;
-        this.prefix = prefix;
-        this.levels = levels;
-        this.actualLevel = 1;
-        this.raw = WorldBuilder.generateWorld(worldPath+"/"+prefix+actualLevel+".txt");
 
-        dimension = new Dimension(raw.length, raw[0].length);
-        grid = WorldBuilder.build(raw, dimension);
-        Position positionPrincess = this.findPrincess().orElse(new Position(-1, -1));
-        princess = new Princess();
-        hasChanged = false;
-        newWorld = false;
-    }
 
     public Optional<Position> findPlayer() /*throws PositionNotFoundException */{
         for (int x = 0; x < dimension.width; x++) {
@@ -84,6 +65,7 @@ public class World {
             for (int y = 0; y < dimension.height; y++) {
                 if (raw[y][x] == WorldEntity.Monster) {
                     positions.add(new Position(x, y));
+
                 }
             }
         }
@@ -135,19 +117,6 @@ public class World {
         return grid.get(position) instanceof Box && isEmpty(nextPos) && isInside(nextPos)
                 && !isDoor(nextPos) && !isPickable(nextPos);
     }
-    public void changeLevel(boolean up) {
-        actualLevel += up ? 1 : -1;
-        this.raw = WorldBuilder.generateWorld(worldPath+"/"+prefix+actualLevel+".txt");
-        dimension = new Dimension(raw.length, raw[0].length);
-        grid = WorldBuilder.build(raw, dimension);
-
-        this.newWorld = true;
-        this.hasChanged = true;
-    }
-
-    public int getActualLevel(){
-        return this.actualLevel;
-    }
 
     public boolean worldHasChanged(){
         return this.hasChanged;
@@ -157,16 +126,8 @@ public class World {
         this.hasChanged = false;
     }
 
-    public void finishNewWorld() {
-        this.newWorld = false;
-    }
-
-    public boolean isNewWorld(){
-        return this.newWorld;
-    }
-
     public void askChange() {
         this.hasChanged = true;
     }
 
-}
+  }

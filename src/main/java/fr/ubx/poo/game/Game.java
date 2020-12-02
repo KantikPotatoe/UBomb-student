@@ -19,34 +19,38 @@ import fr.ubx.poo.model.go.character.Princess;
 
 public class Game {
 
-    private final World world;
+    private final World world[];
     private final Player player;
     private final String worldPath;
     private int initPlayerLives;
     private String prefix;
     private int levels;
     private final List<Monster> monsterList;
+    private int actualLevel;
+    private boolean newWorld;
 
     public Game(String worldPath) {
-        loadConfig(worldPath);
-        //WorldEntity[][] thisworld = WorldBuilder.generateWorld(worldPath+"/"+prefix+"1.txt");
-        monsterList = new ArrayList<>();
-        world = new World(worldPath, prefix, levels);
-        //world = new WorldStatic();
         this.worldPath = worldPath;
+        loadConfig(worldPath);
+        monsterList = new ArrayList<>();
+        world = new World[this.levels];
+        this.actualLevel = 0;
+        for (int i = actualLevel; i < levels ; i++){
+            WorldEntity[][] raw = WorldBuilder.generateWorld(worldPath+"/"+prefix+(i+1)+".txt");
+            world[i] = new World(raw);
+        }
+        newWorld = false;
 
         Position positionPlayer = null;
         Position positionPrincess = null;
 
-        positionPlayer = world.findPlayer().orElseThrow();
+        positionPlayer = findPlayer();
         player = new Player(this, positionPlayer);
 
         loadMonsters();
      }
 
-    public int getInitPlayerLives() {
-        return initPlayerLives;
-    }
+    public int getInitPlayerLives() { return initPlayerLives; }
 
     private void loadConfig(String path) {
 
@@ -63,22 +67,49 @@ public class Game {
     }
 
     public World getWorld() {
-        return world;
+        return world[actualLevel];
     }
 
     public Player getPlayer() {
-        return this.player;
+        return player;
+    }
+
+    public int getActualLevel() {
+        return actualLevel;
     }
 
     private void loadMonsters() {
-        for (int i = 0; i < world.findMonsters().size(); i++) {
-            monsterList.add(new Monster(this, world.findMonsters().get(i)));
+        monsterList.clear();
+        for (int i = 0; i < getWorld().findMonsters().size(); i++) {
+            monsterList.add(new Monster(this, getWorld().findMonsters().get(i)));
         }
     }
+
 
     public List<Monster> getMonsterList() {
         return this.monsterList;
     }
 
+    public void changeLevel(boolean up) {
+        actualLevel += up ? 1 : -1;
+        loadMonsters();
+        player.changeWorld();
+        this.askNewWorld();
+
+    }
+
+    public Position findPlayer() {
+        return getWorld().findPlayer().orElseThrow();
+    }
+
+    public void askNewWorld() { this.newWorld = true;}
+
+    public void finishNewWorld() {
+        this.newWorld = false;
+    }
+
+    public boolean isNewWorld(){
+        return this.newWorld;
+    }
 
 }
