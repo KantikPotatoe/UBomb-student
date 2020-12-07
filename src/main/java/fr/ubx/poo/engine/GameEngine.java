@@ -175,6 +175,10 @@ public final class GameEngine {
 
     private void update(long now) {
         player.update(now);
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
         if (!player.isAlive()) {
             gameLoop.stop();
             showMessage("Perdu!", Color.RED);
