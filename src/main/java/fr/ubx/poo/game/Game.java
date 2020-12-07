@@ -73,7 +73,7 @@ public class Game {
 
     private void loadMonsters() {
         monsterList.clear();
-        getWorld().findMonsters().stream().map(position -> new Monster(this, position)).forEach(monsterList::add);
+        getWorld().findMonstersPositions().stream().map(position -> new Monster(this, position)).forEach(monsterList::add);
     }
 
 
@@ -90,7 +90,7 @@ public class Game {
     }
 
     public Position findPlayer() {
-        return getWorld().findPlayer().orElseThrow();
+        return getWorld().findPlayerPosition().orElseThrow();
     }
 
     public void askNewWorld() {

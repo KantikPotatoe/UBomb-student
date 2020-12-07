@@ -29,6 +29,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
+/**
+ * Game Engine class, manage the engine side.
+ */
 public final class GameEngine {
 
     private static AnimationTimer gameLoop;
@@ -48,6 +51,13 @@ public final class GameEngine {
     private long tick;
     private int j;
 
+    /**
+     * Instantiates a new Game engine.
+     *
+     * @param windowTitle the window title
+     * @param game        the game
+     * @param stage       the stage
+     */
     public GameEngine(final String windowTitle, Game game, final Stage stage) {
         this.windowTitle = windowTitle;
         this.game = game;
@@ -61,6 +71,12 @@ public final class GameEngine {
         buildAndSetGameLoop();
     }
 
+    /**
+     * JavaFX initialize function.
+     *
+     * @param stage the stage
+     * @param game  the game
+     */
     private void initialize(Stage stage, Game game) {
         this.stage = stage;
         Group root = new Group();
@@ -90,13 +106,16 @@ public final class GameEngine {
         spritePlayer = SpriteFactory.createPlayer(layer, player);
         if (isPrincessInWorld(game)) {
             spritePrincess = SpriteFactory.createDecor(layer,
-                    game.getWorld().findPrincess().get(),
+                    game.getWorld().findPrincessPosition().get(),
                     game.getWorld().getPrincess().get());
         }
         game.getMonsterList().stream().map(monster -> SpriteFactory.createMonster(layer, monster)).forEach(monsterSprites::add);
 
     }
 
+    /**
+     * Build and set game loop.
+     */
     protected final synchronized void buildAndSetGameLoop() {
         gameLoop = new AnimationTimer() {
             public void handle(long now) {
@@ -208,6 +227,9 @@ public final class GameEngine {
         renderBombs();
     }
 
+    /**
+     * Start.
+     */
     public void start() {
         gameLoop.start();
     }
@@ -251,7 +273,7 @@ public final class GameEngine {
 
 
     private boolean isPrincessInWorld(Game game) {
-        return game.getWorld().getPrincess().isPresent() && game.getWorld().findPrincess().isPresent();
+        return game.getWorld().getPrincess().isPresent() && game.getWorld().findPrincessPosition().isPresent();
     }
 
     private boolean playerHaveBomb() {

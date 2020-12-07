@@ -79,14 +79,14 @@ public class Player extends GameObject implements Movable {
 
     public void doMove(Direction direction) {
         Position nextPos = direction.nextPosition(getPosition());
-        Decor decor = world.get(nextPos);
+        Decor decor = world.getDecorAtPosition(nextPos);
         if (decor instanceof Box) {
-            world.clear(nextPos);
-            world.set(direction.nextPosition(nextPos), decor);
+            world.clearPosition(nextPos);
+            world.setDecorAtPosition(direction.nextPosition(nextPos), decor);
         } else if (decor instanceof Door) {
             game.changeLevel(((Door) decor).isUp());
         } else if (decor instanceof Pickable) {
-            world.clear(nextPos);
+            world.clearPosition(nextPos);
             pickItem((Pickable) decor);
         }
         setPosition(nextPos);
@@ -98,8 +98,8 @@ public class Player extends GameObject implements Movable {
             if (game.getMonsterList().stream().anyMatch
                     (monster -> monster.getPosition().equals(this.getPosition()))) {
                 this.lives--;
-            } else if (world.findPrincess().isPresent() &&
-                    world.findPrincess().get().equals(this.getPosition())) {
+            } else if (world.findPrincessPosition().isPresent() &&
+                    world.findPrincessPosition().get().equals(this.getPosition())) {
                 this.winner = true;
             }
             if (this.getLives() <= 0) {
@@ -124,12 +124,12 @@ public class Player extends GameObject implements Movable {
 
     public void openDoor() {
         Position nextPos = direction.nextPosition(getPosition());
-        Decor front = world.get(nextPos);
+        Decor front = world.getDecorAtPosition(nextPos);
         if (getKeys() > 0 && front instanceof Door) {
             // Sinon, si on a des clés, alors on ouvre la porte et on change le monde
             this.keys--;
-            world.clear(nextPos);
-            world.set(nextPos, new Door(((Door) front).isUp(), true));
+            world.clearPosition(nextPos);
+            world.setDecorAtPosition(nextPos, new Door(((Door) front).isUp(), true));
         }
     }
 

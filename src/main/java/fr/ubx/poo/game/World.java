@@ -29,7 +29,7 @@ public class World {
     }
 
 
-    public Optional<Position> findPlayer() {
+    public Optional<Position> findPlayerPosition() {
         for (int x = 0; x < dimension.width; x++) {
             for (int y = 0; y < dimension.height; y++) {
                 if (raw[y][x] == WorldEntity.PLAYER || raw[y][x] == WorldEntity.DOOR_PREV_OPENED) {
@@ -40,7 +40,7 @@ public class World {
         return Optional.empty();
     }
 
-    public Optional<Position> findPrincess() {
+    public Optional<Position> findPrincessPosition() {
         for (int x = 0; x < dimension.width; x++) {
             for (int y = 0; y < dimension.height; y++) {
                 if (raw[y][x] == WorldEntity.PRINCESS) {
@@ -51,7 +51,7 @@ public class World {
         return Optional.empty();
     }
 
-    public List<Position> findMonsters() {
+    public List<Position> findMonstersPositions() {
         List<Position> positions = new ArrayList<>();
         for (int x = 0; x < dimension.width; x++) {
             for (int y = 0; y < dimension.height; y++) {
@@ -68,16 +68,16 @@ public class World {
         return Optional.of(princess);
     }
 
-    public Decor get(Position position) {
+    public Decor getDecorAtPosition(Position position) {
         return grid.get(position);
     }
 
-    public void set(Position position, Decor decor) {
+    public void setDecorAtPosition(Position position, Decor decor) {
         grid.put(position, decor);
         this.hasChanged = true;
     }
 
-    public void clear(Position position) {
+    public void clearPosition(Position position) {
         grid.remove(position);
         this.hasChanged = true;
     }

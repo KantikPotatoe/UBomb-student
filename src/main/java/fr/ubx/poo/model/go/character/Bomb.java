@@ -43,9 +43,9 @@ public class Bomb extends GameObject {
         for (Direction d : Direction.values()) {
             for (int i = 1; i <= this.range; i++) {
                 Position nextPos = d.nextPosition(this.getPosition(), i);
-                if (world.get(nextPos) instanceof Box ||
-                        (world.get(nextPos) instanceof Pickable && !(world.get(nextPos) instanceof Key))) {
-                    world.clear(nextPos);
+                if (world.getDecorAtPosition(nextPos) instanceof Box ||
+                        (world.getDecorAtPosition(nextPos) instanceof Pickable && !(world.getDecorAtPosition(nextPos) instanceof Key))) {
+                    world.clearPosition(nextPos);
                     break;
                 }
                 if (game.getPlayer().getPosition().equals(nextPos)) {
