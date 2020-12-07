@@ -8,7 +8,7 @@ import javafx.scene.layout.Pane;
 public abstract class SpriteGameObject extends Sprite {
     protected final GameObject go;
 
-    public SpriteGameObject(Pane layer, Image image, GameObject go) {
+    protected SpriteGameObject(Pane layer, Image image, GameObject go) {
         super(layer, image);
         this.go = go;
     }

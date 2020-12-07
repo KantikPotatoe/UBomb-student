@@ -5,6 +5,9 @@
 package fr.ubx.poo.game;
 
 
+import fr.ubx.poo.model.go.character.Monster;
+import fr.ubx.poo.model.go.character.Player;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,10 +15,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
-import fr.ubx.poo.model.go.character.Monster;
-import fr.ubx.poo.model.go.character.Player;
-import fr.ubx.poo.model.go.character.Princess;
 
 public class Game {
 
@@ -38,8 +37,6 @@ public class Game {
             world[i] = new World(raw);
         }
         newWorld = false;
-
-        Position positionPrincess = null;
 
         Position positionPlayer = findPlayer();
         player = new Player(this, positionPlayer);
@@ -116,4 +113,5 @@ public class Game {
     public World worldNumber (int n){
         return world[n];
     }
+
 }

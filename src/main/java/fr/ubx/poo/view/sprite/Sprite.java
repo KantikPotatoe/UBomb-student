@@ -11,12 +11,12 @@ import javafx.scene.layout.Pane;
 
 public abstract class Sprite {
 
-    public static final int size = 40;
+    public static final int SIZE = 40;
     private final Pane layer;
     private ImageView imageView;
     private Image image;
 
-    public Sprite(Pane layer, Image image) {
+    protected Sprite(Pane layer, Image image) {
         this.layer = layer;
         this.image = image;
     }
@@ -37,8 +37,8 @@ public abstract class Sprite {
         }
         updateImage();
         imageView = new ImageView(this.image);
-        imageView.setX(getPosition().x * size);
-        imageView.setY(getPosition().y * size);
+        imageView.setX(getPosition().x * (double) SIZE);
+        imageView.setY(getPosition().y * (double) SIZE);
         layer.getChildren().add(imageView);
     }
 

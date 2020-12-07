@@ -6,20 +6,20 @@ import fr.ubx.poo.game.Position;
 import fr.ubx.poo.game.World;
 import fr.ubx.poo.model.go.GameObject;
 import fr.ubx.poo.view.image.ImageResource;
-import fr.ubx.poo.view.sprite.Sprite;
 import fr.ubx.poo.model.bonus.*;
 import fr.ubx.poo.model.decor.*;
 
 public class Bomb extends GameObject {
     private int lifetime;
     private final int range;
+
     public Bomb(Game game, Position position, int range) {
         super(game, position);
         this.range = range;
         lifetime = 4;
     }
 
-    public ImageResource getImageBomb(){
+    public ImageResource getImageBomb() {
         return switch (lifetime) {
             case 4 -> ImageResource.BOMB4;
             case 3 -> ImageResource.BOMB3;
@@ -29,36 +29,36 @@ public class Bomb extends GameObject {
         };
     }
 
-    public int getLifetime(){
+    public int getLifetime() {
         return this.lifetime;
     }
 
-    public void dropTime(){
-        this.lifetime --;
+    public void dropTime() {
+        this.lifetime--;
     }
 
-    public void destroySides(int w){
+    public void destroySides(int w) {
         //TODO Faire les animations
         World world = game.worldNumber(w);
-        for(Direction d : Direction.values()){
-            for(int i = 1; i <= this.range; i++){
-                Position nextPos = d.nextPosition(this.getPosition(),i);
+        for (Direction d : Direction.values()) {
+            for (int i = 1; i <= this.range; i++) {
+                Position nextPos = d.nextPosition(this.getPosition(), i);
                 if (world.get(nextPos) instanceof Box ||
-                        (world.get(nextPos) instanceof Pickable && !(world.get(nextPos) instanceof Key ))){
+                        (world.get(nextPos) instanceof Pickable && !(world.get(nextPos) instanceof Key))) {
                     world.clear(nextPos);
                     break;
                 }
-                if (game.getPlayer().getPosition().equals(nextPos)){
+                if (game.getPlayer().getPosition().equals(nextPos)) {
                     game.getPlayer().decreaseLife();
                     break;
                 }
-                if(game.getMonsterList().stream().anyMatch
-                        (monster ->monster.getPosition().equals(nextPos))){
+                if (game.getMonsterList().stream().anyMatch
+                        (monster -> monster.getPosition().equals(nextPos))) {
                     game.getMonsterList().removeIf(monster -> monster.getPosition().equals(nextPos));
                     world.askChange();
                     break;
                 }
-                if (!world.isEmpty(nextPos)){
+                if (!world.isEmpty(nextPos)) {
                     break;
                 }
             }

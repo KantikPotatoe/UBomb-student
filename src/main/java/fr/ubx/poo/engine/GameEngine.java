@@ -5,13 +5,11 @@
 package fr.ubx.poo.engine;
 
 import fr.ubx.poo.game.Direction;
+import fr.ubx.poo.game.Game;
 import fr.ubx.poo.model.go.character.Bomb;
-import fr.ubx.poo.model.go.character.Monster;
-import fr.ubx.poo.model.go.character.Princess;
+import fr.ubx.poo.model.go.character.Player;
 import fr.ubx.poo.view.sprite.Sprite;
 import fr.ubx.poo.view.sprite.SpriteFactory;
-import fr.ubx.poo.game.Game;
-import fr.ubx.poo.model.go.character.Player;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.scene.Group;
@@ -37,7 +35,6 @@ public final class GameEngine {
     private final String windowTitle;
     private final Game game;
     private final Player player;
-    //private final Princess princess;
     private final List<Sprite> sprites = new ArrayList<>();
     private final List<Sprite> monsterSprites = new ArrayList<>();
     private StatusBar statusBar;
@@ -47,18 +44,19 @@ public final class GameEngine {
     private Sprite spritePlayer;
     private Sprite spritePrincess;
     private final List<Sprite> bombSprites = new ArrayList<>();
-    private final Map<Integer,List<Bomb>> bombs = new HashMap<>();
+    private final Map<Integer, List<Bomb>> bombs = new HashMap<>();
     private long i;
     private int j;
+
     public GameEngine(final String windowTitle, Game game, final Stage stage) {
         this.windowTitle = windowTitle;
         this.game = game;
         this.player = game.getPlayer();
-        for(int i = 0; i < game.getLevels(); i++){
-            bombs.put(i, new ArrayList<>() );
+        for (int cpt = 0; cpt < game.getLevels(); cpt++) {
+            bombs.put(cpt, new ArrayList<>());
         }
         initialize(stage, game);
-        i= 0;
+        i = 0;
         j = 0;
         buildAndSetGameLoop();
     }
@@ -68,13 +66,12 @@ public final class GameEngine {
         Group root = new Group();
         layer = new Pane();
 
-        int height = game.getWorld().dimension.height;
-        int width = game.getWorld().dimension.width;
-        int sceneWidth = width * Sprite.size;
-        int sceneHeight = height * Sprite.size;
-        Scene scene = new Scene(root, sceneWidth, sceneHeight + StatusBar.height);
+        int height = game.getWorld().getDimension().height;
+        int width = game.getWorld().getDimension().width;
+        int sceneWidth = width * Sprite.SIZE;
+        int sceneHeight = height * Sprite.SIZE;
+        Scene scene = new Scene(root, sceneWidth, (double) sceneHeight + StatusBar.HEIGHT);
         scene.getStylesheets().add(getClass().getResource("/css/application.css").toExternalForm());
-
         stage.setTitle(windowTitle);
         stage.setScene(scene);
         stage.setResizable(false);
@@ -82,19 +79,24 @@ public final class GameEngine {
 
         input = new Input(scene);
         root.getChildren().add(layer);
-        statusBar = new StatusBar(root, sceneWidth, sceneHeight, game);
+        statusBar = new StatusBar(root, sceneWidth, sceneHeight);
         // Create decor sprites
         game.getWorld().forEach((pos, d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
         spritePlayer = SpriteFactory.createPlayer(layer, player);
-        if(game.getWorld().getPrincess().isPresent() && game.getWorld().findPrincess().isPresent()){
-            spritePrincess = SpriteFactory.createDecor(layer, game.getWorld().findPrincess().get(),
+        if (isPrincessInWorld(game)) {
+            spritePrincess = SpriteFactory.createDecor(layer,
+                    game.getWorld().findPrincess().get(),
                     game.getWorld().getPrincess().get());
         }
         game.getMonsterList().stream().map(monster -> SpriteFactory.createMonster(layer, monster)).forEach(monsterSprites::add);
 
     }
 
-    protected final void buildAndSetGameLoop() {
+    private boolean isPrincessInWorld(Game game) {
+        return game.getWorld().getPrincess().isPresent() && game.getWorld().findPrincess().isPresent();
+    }
+
+    protected final synchronized void buildAndSetGameLoop() {
         gameLoop = new AnimationTimer() {
             public void handle(long now) {
                 // Check keyboard actions
@@ -102,14 +104,14 @@ public final class GameEngine {
 
                 // Do actions
                 i++;
-                if(i%60==0){
+                if (i % 60 == 0) {
                     j++;
                     bombs.forEach((w, bomb) -> bomb.forEach(Bomb::dropTime));
-                    bombs.forEach((w,bombs) -> bombs.stream().filter(bomb -> bomb.getLifetime() < 0).forEach(bomb -> {
+                    bombs.forEach((w, bombList) -> bombList.stream().filter(bomb -> bomb.getLifetime() < 0).forEach(bomb -> {
                         player.incDecBomb(1);
                         bomb.destroySides(w);
                     }));
-                    bombs.replaceAll((w,bombs) -> bombs = bombs.stream()
+                    bombs.replaceAll((w, bombList) -> bombList = bombList.stream()
                             .filter(bomb -> bomb.getLifetime() >= 0)
                             .collect(Collectors.toList()));
                     game.getMonsterList().forEach(monster -> monster.doMove(Direction.random()));
@@ -143,7 +145,7 @@ public final class GameEngine {
         }
         if (input.isBomb() && player.getBombsNumber() > 0) {
             Bomb bomb = new Bomb(game, player.getPosition(), player.getSizeBombs());
-            this.bombSprites.add(SpriteFactory.createBomb(layer,bomb));
+            this.bombSprites.add(SpriteFactory.createBomb(layer, bomb));
             this.bombs.get(game.getActualLevel()).add(bomb);
             player.incDecBomb(-1);
         }
@@ -175,10 +177,6 @@ public final class GameEngine {
 
     private void update(long now) {
         player.update(now);
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
         if (!player.isAlive()) {
             gameLoop.stop();
             showMessage("Perdu!", Color.RED);
@@ -192,7 +190,7 @@ public final class GameEngine {
     }
 
     private void render() {
-        if(game.isNewWorld()){
+        if (game.isNewWorld()) {
             this.player.setPosition(game.findPlayer());
 
             game.finishNewWorld();
@@ -204,8 +202,7 @@ public final class GameEngine {
             spritePlayer.remove();
             initialize(stage, game);
 
-        } else
-        if(game.getWorld().worldHasChanged()) {
+        } else if (game.getWorld().worldHasChanged()) {
             sprites.forEach(Sprite::remove);
             sprites.clear();
             game.getWorld().forEach((pos, d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
@@ -225,7 +222,7 @@ public final class GameEngine {
         monsterSprites.forEach(Sprite::render);
         bombSprites.forEach(Sprite::remove);
         bombSprites.clear();
-        bombs.get(game.getActualLevel()).forEach(bomb -> bombSprites.add(SpriteFactory.createBomb(layer,bomb)));
+        bombs.get(game.getActualLevel()).forEach(bomb -> bombSprites.add(SpriteFactory.createBomb(layer, bomb)));
         bombSprites.forEach(Sprite::render);
     }
 

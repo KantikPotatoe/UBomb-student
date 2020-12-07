@@ -19,6 +19,10 @@ import javafx.scene.layout.Pane;
 
 public final class SpriteFactory {
 
+    private SpriteFactory(){
+        throw  new IllegalStateException("Static class");
+    }
+
     public static Sprite createDecor(Pane layer, Position position, Decor decor) {
         ImageFactory factory = ImageFactory.getInstance();
 
@@ -28,16 +32,16 @@ public final class SpriteFactory {
             return new SpriteDecor(layer, factory.get(TREE), position);
         if (decor instanceof Box)
             return new SpriteDecor(layer, factory.get(BOX), position);
-        if(decor instanceof BombBonus)
-            return new SpriteDecor(layer,factory.get(((BombBonus) decor).getEntity()),position);
+        if (decor instanceof BombBonus)
+            return new SpriteDecor(layer, factory.get(((BombBonus) decor).getEntity()), position);
         if (decor instanceof Door)
             return new SpriteDecor(layer, factory.get(((Door) decor).getDoorEntity()), position);
         if (decor instanceof Heart)
             return new SpriteDecor(layer, factory.get(HEART), position);
         if (decor instanceof Key)
             return new SpriteDecor(layer, factory.get(KEY), position);
-        if(decor instanceof Princess)
-            return new SpriteDecor(layer, factory.get(PRINCESS), position );
+        if (decor instanceof Princess)
+            return new SpriteDecor(layer, factory.get(PRINCESS), position);
         return null;
     }
 
@@ -45,11 +49,7 @@ public final class SpriteFactory {
         return new SpritePlayer(layer, player);
     }
 
-  /*  public static Sprite createPrincess(Pane layer, Princess princess) {
-        ImageFactory factory = ImageFactory.getInstance();
-        return new SpritePrincess(layer, factory.get(PRINCESS), princess);
-    }*/
-    public static Sprite createBomb(Pane layer, Bomb bomb){
+    public static Sprite createBomb(Pane layer, Bomb bomb) {
         ImageFactory factory = ImageFactory.getInstance();
         return new SpriteMonster(layer, factory.get(bomb.getImageBomb()), bomb);
     }

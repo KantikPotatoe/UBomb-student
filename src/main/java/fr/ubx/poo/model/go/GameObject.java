@@ -24,7 +24,7 @@ public abstract class GameObject extends Entity {
         this.position = position;
     }
 
-    public GameObject(Game game, Position position) {
+    protected GameObject(Game game, Position position) {
         this.game = game;
         this.position = position;
     }
