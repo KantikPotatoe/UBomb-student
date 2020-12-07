@@ -160,7 +160,7 @@ public class Player extends GameObject implements Movable {
         this.world = game.getWorld();
     }
 
-    public void incDecBomb(int bombsNumber) {
+    public void changeNumberOfBombs(int bombsNumber) {
         this.bombsNumber += bombsNumber;
     }
 }
