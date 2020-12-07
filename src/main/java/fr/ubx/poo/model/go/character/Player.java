@@ -139,15 +139,19 @@ public class Player extends GameObject implements Movable {
         else if (item instanceof Heart)
             this.lives++;
         else if (item instanceof BombBonus) {
-            BombBonus b = (BombBonus) item;
-            if (b.isRange()) {
-                if (b.isUp()) {
+            BombBonus bombBonus = (BombBonus) item;
+            if (bombBonus.isRange()) {
+                if (bombBonus.isUp()) {
                     this.sizeBombs += 1;
                 } else {
                     this.sizeBombs += -1;
                 }
             } else {
-                this.bombsNumber += b.isUp() ? 1 : -1;
+                if (bombBonus.isUp()) {
+                    bombsNumber++;
+                } else if (bombsNumber != 1) {
+                    bombsNumber--;
+                }
             }
         }
     }
