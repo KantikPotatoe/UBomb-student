@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.IntStream;
 
 public class Game {
 
@@ -32,20 +33,16 @@ public class Game {
         monsterList = new ArrayList<>();
         world = new World[this.levels];
         this.currentLevel = 0;
-        for (int i = currentLevel; i < levels; i++) {
+        IntStream.range(currentLevel, levels).forEach(i -> {
             WorldEntity[][] raw = WorldBuilder.generateWorld(worldPath + "/" + prefix + (i + 1) + ".txt");
             world[i] = new World(raw);
-        }
+        });
         newWorld = false;
 
         Position positionPlayer = findPlayer();
         player = new Player(this, positionPlayer);
 
         loadMonsters();
-    }
-
-    public int getInitPlayerLives() {
-        return initPlayerLives;
     }
 
     private void loadConfig(String path) {
@@ -76,9 +73,7 @@ public class Game {
 
     private void loadMonsters() {
         monsterList.clear();
-        for (int i = 0; i < getWorld().findMonsters().size(); i++) {
-            monsterList.add(new Monster(this, getWorld().findMonsters().get(i)));
-        }
+        getWorld().findMonsters().stream().map(position -> new Monster(this, position)).forEach(monsterList::add);
     }
 
 
@@ -125,5 +120,10 @@ public class Game {
     public int getWorldWidth() {
         return getWorld().getDimension().width;
     }
+
+    public int getInitPlayerLives() {
+        return initPlayerLives;
+    }
+
 
 }

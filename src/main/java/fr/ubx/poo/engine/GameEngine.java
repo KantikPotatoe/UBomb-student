@@ -97,7 +97,6 @@ public final class GameEngine {
 
     }
 
-
     protected final synchronized void buildAndSetGameLoop() {
         gameLoop = new AnimationTimer() {
             public void handle(long now) {
@@ -167,10 +166,6 @@ public final class GameEngine {
         player.changeNumberOfBombs(-1);
     }
 
-    private boolean playerHaveBomb() {
-        return player.getBombsNumber() > 0;
-    }
-
     private void showMessage(String msg, Color color) {
         Text waitingForKey = new Text(msg);
         waitingForKey.setTextAlignment(TextAlignment.CENTER);
@@ -190,7 +185,6 @@ public final class GameEngine {
         }.start();
     }
 
-
     private void update(long now) {
         player.update(now);
         if (!player.isAlive()) {
@@ -201,8 +195,6 @@ public final class GameEngine {
             gameLoop.stop();
             showMessage("CONGRATULATIONS!", Color.BLUE);
         }
-
-
     }
 
     private void render() {
@@ -215,6 +207,11 @@ public final class GameEngine {
         renderGameEntities();
         renderBombs();
     }
+
+    public void start() {
+        gameLoop.start();
+    }
+
 
     private void renderBombs() {
         clearSprites(bombSprites);
@@ -252,11 +249,13 @@ public final class GameEngine {
         monsterSprites.clear();
     }
 
-    public void start() {
-        gameLoop.start();
-    }
 
     private boolean isPrincessInWorld(Game game) {
         return game.getWorld().getPrincess().isPresent() && game.getWorld().findPrincess().isPresent();
     }
+
+    private boolean playerHaveBomb() {
+        return player.getBombsNumber() > 0;
+    }
+
 }
