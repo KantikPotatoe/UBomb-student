@@ -65,4 +65,7 @@ public class Bomb extends GameObject {
         }
     }
 
+    public int getRange() {
+        return range;
+    }
 }

@@ -5,6 +5,11 @@
 package fr.ubx.poo.engine;
 
 import fr.ubx.poo.game.Direction;
+import fr.ubx.poo.game.Position;
+import fr.ubx.poo.game.World;
+import fr.ubx.poo.model.bonus.Key;
+import fr.ubx.poo.model.bonus.Pickable;
+import fr.ubx.poo.model.decor.Box;
 import fr.ubx.poo.model.go.character.Bomb;
 import fr.ubx.poo.model.go.character.Monster;
 import fr.ubx.poo.model.go.character.Princess;
@@ -188,6 +193,7 @@ public final class GameEngine {
     }
 
     private void render() {
+        World world = game.getWorld();
         if(game.isNewWorld()){
             this.player.setPosition(game.findPlayer());
 
@@ -201,11 +207,11 @@ public final class GameEngine {
             initialize(stage, game);
 
         } else
-        if(game.getWorld().worldHasChanged()) {
+        if(world.worldHasChanged()) {
             sprites.forEach(Sprite::remove);
             sprites.clear();
-            game.getWorld().forEach((pos, d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
-            game.getWorld().finishChange();
+            world.forEach((pos, d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
+            world.finishChange();
             monsterSprites.forEach(Sprite::remove);
             monsterSprites.clear();
             game.getMonsterList().stream().map(monster -> SpriteFactory.createMonster(layer, monster)).forEach(monsterSprites::add);
@@ -221,7 +227,27 @@ public final class GameEngine {
         monsterSprites.forEach(Sprite::render);
         bombSprites.forEach(Sprite::remove);
         bombSprites.clear();
-        bombs.get(game.getActualLevel()).forEach(bomb -> bombSprites.add(SpriteFactory.createBomb(layer,bomb)));
+        bombs.get(game.getActualLevel()).forEach(bomb -> {
+            bombSprites.add(SpriteFactory.createBomb(layer,bomb));
+            if(bomb.getLifetime() == 0) {
+                for (Direction d : Direction.values()) {
+                    for (int i = 1; i <= bomb.getRange(); i++) {
+                        Position nextPos = d.nextPosition(bomb.getPosition(), i);
+                        Position previousPos = d.nextPosition(bomb.getPosition(), i-1);
+
+                        if ((world.get(previousPos) instanceof Box ||
+                                (world.get(previousPos) instanceof Pickable && !(world.get(previousPos) instanceof Key)))
+                                || (!world.isEmpty(previousPos))){
+                            break;
+                            //bombSprites.add(SpriteFactory.createExplosion(layer, new Bomb(game, nextPos, 0 )));
+                        } else {
+                           bombSprites.add(SpriteFactory.createExplosion(layer, new Bomb(game, nextPos, 0 )));
+
+                        }
+                    }
+                }
+            }
+        });
         bombSprites.forEach(Sprite::render);
     }
 
