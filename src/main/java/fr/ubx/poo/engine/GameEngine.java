@@ -54,7 +54,6 @@ public final class GameEngine {
     private final List<Sprite> bombSprites = new ArrayList<>();
     private final Map<Integer,List<Bomb>> bombs = new HashMap<>();
     private long i;
-    private int j;
     public GameEngine(final String windowTitle, Game game, final Stage stage) {
         this.windowTitle = windowTitle;
         this.game = game;
@@ -64,7 +63,6 @@ public final class GameEngine {
         }
         initialize(stage, game);
         i= 0;
-        j = 0;
         buildAndSetGameLoop();
     }
 
@@ -108,7 +106,6 @@ public final class GameEngine {
                 // Do actions
                 i++;
                 if(i%60==0){
-                    j++;
                     bombs.forEach((w, bomb) -> bomb.forEach(Bomb::dropTime));
                     bombs.forEach((w,bombs) -> bombs.stream().filter(bomb -> bomb.getLifetime() < 0).forEach(bomb -> {
                         player.incDecBomb(1);
@@ -229,24 +226,8 @@ public final class GameEngine {
         bombSprites.clear();
         bombs.get(game.getActualLevel()).forEach(bomb -> {
             bombSprites.add(SpriteFactory.createBomb(layer,bomb));
-            if(bomb.getLifetime() == 0) {
-                for (Direction d : Direction.values()) {
-                    for (int i = 1; i <= bomb.getRange(); i++) {
-                        Position nextPos = d.nextPosition(bomb.getPosition(), i);
-                        Position previousPos = d.nextPosition(bomb.getPosition(), i-1);
-
-                        if ((world.get(previousPos) instanceof Box ||
-                                (world.get(previousPos) instanceof Pickable && !(world.get(previousPos) instanceof Key)))
-                                || (!world.isEmpty(previousPos))){
-                            break;
-                            //bombSprites.add(SpriteFactory.createExplosion(layer, new Bomb(game, nextPos, 0 )));
-                        } else {
-                           bombSprites.add(SpriteFactory.createExplosion(layer, new Bomb(game, nextPos, 0 )));
-
-                        }
-                    }
-                }
-            }
+            bomb.createExplosions().forEach(b ->bombSprites.
+                    add(SpriteFactory.createExplosion(layer,b)));
         });
         bombSprites.forEach(Sprite::render);
     }
