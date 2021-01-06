@@ -5,6 +5,11 @@
 package fr.ubx.poo.engine;
 
 import fr.ubx.poo.game.Direction;
+import fr.ubx.poo.game.Position;
+import fr.ubx.poo.game.World;
+import fr.ubx.poo.model.bonus.Key;
+import fr.ubx.poo.model.bonus.Pickable;
+import fr.ubx.poo.model.decor.Box;
 import fr.ubx.poo.model.go.character.Bomb;
 import fr.ubx.poo.model.go.character.Monster;
 import fr.ubx.poo.model.go.character.Princess;
@@ -49,7 +54,6 @@ public final class GameEngine {
     private final List<Sprite> bombSprites = new ArrayList<>();
     private final Map<Integer,List<Bomb>> bombs = new HashMap<>();
     private long i;
-    private int j;
     public GameEngine(final String windowTitle, Game game, final Stage stage) {
         this.windowTitle = windowTitle;
         this.game = game;
@@ -59,7 +63,6 @@ public final class GameEngine {
         }
         initialize(stage, game);
         i= 0;
-        j = 0;
         buildAndSetGameLoop();
     }
 
@@ -103,7 +106,6 @@ public final class GameEngine {
                 // Do actions
                 i++;
                 if(i%60==0){
-                    j++;
                     bombs.forEach((w, bomb) -> bomb.forEach(Bomb::dropTime));
                     bombs.forEach((w,bombs) -> bombs.stream().filter(bomb -> bomb.getLifetime() < 0).forEach(bomb -> {
                         player.incDecBomb(1);
@@ -192,6 +194,7 @@ public final class GameEngine {
     }
 
     private void render() {
+        World world = game.getWorld();
         if(game.isNewWorld()){
             this.player.setPosition(game.findPlayer());
 
@@ -205,11 +208,11 @@ public final class GameEngine {
             initialize(stage, game);
 
         } else
-        if(game.getWorld().worldHasChanged()) {
+        if(world.worldHasChanged()) {
             sprites.forEach(Sprite::remove);
             sprites.clear();
-            game.getWorld().forEach((pos, d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
-            game.getWorld().finishChange();
+            world.forEach((pos, d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
+            world.finishChange();
             monsterSprites.forEach(Sprite::remove);
             monsterSprites.clear();
             game.getMonsterList().stream().map(monster -> SpriteFactory.createMonster(layer, monster)).forEach(monsterSprites::add);
@@ -225,7 +228,11 @@ public final class GameEngine {
         monsterSprites.forEach(Sprite::render);
         bombSprites.forEach(Sprite::remove);
         bombSprites.clear();
-        bombs.get(game.getActualLevel()).forEach(bomb -> bombSprites.add(SpriteFactory.createBomb(layer,bomb)));
+        bombs.get(game.getActualLevel()).forEach(bomb -> {
+            bombSprites.add(SpriteFactory.createBomb(layer,bomb));
+            bomb.createExplosions().forEach(b ->bombSprites.
+                    add(SpriteFactory.createExplosion(layer,b)));
+        });
         bombSprites.forEach(Sprite::render);
     }
 

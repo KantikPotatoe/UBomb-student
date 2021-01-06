@@ -16,6 +16,8 @@ import fr.ubx.poo.model.go.character.Princess;
 import fr.ubx.poo.view.image.ImageFactory;
 import javafx.scene.layout.Pane;
 
+import java.awt.*;
+
 
 public final class SpriteFactory {
 
@@ -51,9 +53,13 @@ public final class SpriteFactory {
     }*/
     public static Sprite createBomb(Pane layer, Bomb bomb){
         ImageFactory factory = ImageFactory.getInstance();
-        return new SpriteMonster(layer, factory.get(bomb.getImageBomb()), bomb);
+        return new SpriteBomb(layer, factory.get(bomb.getImageBomb()), bomb);
     }
 
+    public static Sprite createExplosion(Pane layer, Bomb bomb){
+        ImageFactory factory = ImageFactory.getInstance();
+        return new SpriteBomb(layer, factory.get(EXPLOSION), bomb);
+    }
     public static Sprite createMonster(Pane layer, Monster monster) {
         ImageFactory factory = ImageFactory.getInstance();
         return new SpriteMonster(layer, factory.get(MONSTER), monster);
