@@ -93,21 +93,21 @@ public class Player extends GameObject implements Movable {
     }
 
     public void update(long now) {
+
         if (isMoveRequestedAndCanMove(direction)) {
             doMove(direction);
             if (game.getMonsterList().stream().anyMatch
                     (monster -> monster.getPosition().equals(this.getPosition()))) {
                 this.lives--;
-            } else if (world.findPrincessPosition().isPresent() &&
-                    world.findPrincessPosition().get().equals(this.getPosition())) {
+            } 
+            moveRequested = false;
+            if (world.findPrincess().isPresent() &&
+                    world.findPrincess().get().equals(this.getPosition())) {
                 this.winner = true;
             }
-            if (this.getLives() <= 0) {
+            if(this.getLives() <= 0){
                 this.alive = false;
             }
-        }
-
-        moveRequested = false;
     }
 
     private boolean isMoveRequestedAndCanMove(Direction direction) {

@@ -23,7 +23,7 @@ public class BombBonus extends Pickable {
         return up;
     }
 
-    public ImageResource getEntity(){
+    public ImageResource getImageResource(){
         if(up){
             if(range){
                 return ImageResource.BOMBRUP;

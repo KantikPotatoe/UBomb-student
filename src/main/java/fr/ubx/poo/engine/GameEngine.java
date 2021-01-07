@@ -6,6 +6,12 @@ package fr.ubx.poo.engine;
 
 import fr.ubx.poo.game.Direction;
 import fr.ubx.poo.game.Game;
+
+import fr.ubx.poo.game.Position;
+import fr.ubx.poo.game.World;
+import fr.ubx.poo.model.bonus.Key;
+import fr.ubx.poo.model.bonus.Pickable;
+import fr.ubx.poo.model.decor.Box;
 import fr.ubx.poo.model.go.character.Bomb;
 import fr.ubx.poo.model.go.character.Player;
 import fr.ubx.poo.view.sprite.Sprite;
@@ -58,6 +64,7 @@ public final class GameEngine {
      * @param game        the game
      * @param stage       the stage
      */
+
     public GameEngine(final String windowTitle, Game game, final Stage stage) {
         this.windowTitle = windowTitle;
         this.game = game;
@@ -66,8 +73,10 @@ public final class GameEngine {
             bombs.put(cpt, new ArrayList<>());
         }
         initialize(stage, game);
+
         tick = 0;
         j = 0;
+
         buildAndSetGameLoop();
     }
 
@@ -128,6 +137,7 @@ public final class GameEngine {
                     j++;
 
                     bombActionManager();
+
 
                     game.getMonsterList().forEach(monster -> monster.doMove(Direction.random()));
                 }
@@ -217,6 +227,7 @@ public final class GameEngine {
     }
 
     private void render() {
+
         if (game.isNewWorld()) {
             this.player.setPosition(game.findPlayer());
             renderNewWorld();
@@ -239,6 +250,14 @@ public final class GameEngine {
         clearSprites(bombSprites);
         bombs.get(game.getCurrentLevel()).forEach(bomb -> bombSprites.add(SpriteFactory.createBomb(layer, bomb)));
         bombSprites.forEach(Sprite::render);
+        bombSprites.forEach(Sprite::remove);
+        bombSprites.clear();
+        bombs.get(game.getActualLevel()).forEach(bomb -> {
+            bombSprites.add(SpriteFactory.createBomb(layer,bomb));
+            bomb.createExplosions().forEach(b ->bombSprites.
+                    add(SpriteFactory.createExplosion(layer,b)));
+        });
+        bombSprites.forEach(Sprite::render);
     }
 
     private void renderGameEntities() {
@@ -248,6 +267,7 @@ public final class GameEngine {
             spritePrincess.render();
         }
         monsterSprites.forEach(Sprite::render);
+
     }
 
     private void renderWorldWhenChanged() {

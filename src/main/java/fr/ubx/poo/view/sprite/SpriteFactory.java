@@ -16,6 +16,8 @@ import fr.ubx.poo.model.go.character.Princess;
 import fr.ubx.poo.view.image.ImageFactory;
 import javafx.scene.layout.Pane;
 
+import java.awt.*;
+
 
 public final class SpriteFactory {
 
@@ -26,23 +28,8 @@ public final class SpriteFactory {
     public static Sprite createDecor(Pane layer, Position position, Decor decor) {
         ImageFactory factory = ImageFactory.getInstance();
 
-        if (decor instanceof Stone)
-            return new SpriteDecor(layer, factory.get(STONE), position);
-        if (decor instanceof Tree)
-            return new SpriteDecor(layer, factory.get(TREE), position);
-        if (decor instanceof Box)
-            return new SpriteDecor(layer, factory.get(BOX), position);
-        if (decor instanceof BombBonus)
-            return new SpriteDecor(layer, factory.get(((BombBonus) decor).getEntity()), position);
-        if (decor instanceof Door)
-            return new SpriteDecor(layer, factory.get(((Door) decor).getDoorEntity()), position);
-        if (decor instanceof Heart)
-            return new SpriteDecor(layer, factory.get(HEART), position);
-        if (decor instanceof Key)
-            return new SpriteDecor(layer, factory.get(KEY), position);
-        if (decor instanceof Princess)
-            return new SpriteDecor(layer, factory.get(PRINCESS), position);
-        return null;
+        return new SpriteDecor(layer, factory.get(decor.getImageResource()), position);
+
     }
 
     public static Sprite createPlayer(Pane layer, Player player) {
@@ -51,9 +38,13 @@ public final class SpriteFactory {
 
     public static Sprite createBomb(Pane layer, Bomb bomb) {
         ImageFactory factory = ImageFactory.getInstance();
-        return new SpriteMonster(layer, factory.get(bomb.getImageBomb()), bomb);
+        return new SpriteBomb(layer, factory.get(bomb.getImageBomb()), bomb);
     }
 
+    public static Sprite createExplosion(Pane layer, Bomb bomb){
+        ImageFactory factory = ImageFactory.getInstance();
+        return new SpriteBomb(layer, factory.get(EXPLOSION), bomb);
+    }
     public static Sprite createMonster(Pane layer, Monster monster) {
         ImageFactory factory = ImageFactory.getInstance();
         return new SpriteMonster(layer, factory.get(MONSTER), monster);

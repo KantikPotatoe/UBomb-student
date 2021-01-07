@@ -8,6 +8,10 @@ import fr.ubx.poo.model.go.GameObject;
 import fr.ubx.poo.view.image.ImageResource;
 import fr.ubx.poo.model.bonus.*;
 import fr.ubx.poo.model.decor.*;
+import fr.ubx.poo.view.sprite.SpriteFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Bomb extends GameObject {
     private int lifetime;
@@ -37,8 +41,9 @@ public class Bomb extends GameObject {
         this.lifetime--;
     }
 
-    public void destroySides(int w) {
-        //TODO Faire les animations
+
+    public void destroySides(int w){
+
         World world = game.worldNumber(w);
         for (Direction d : Direction.values()) {
             for (int i = 1; i <= this.range; i++) {
@@ -65,4 +70,28 @@ public class Bomb extends GameObject {
         }
     }
 
+    public List<Bomb> createExplosions(){
+        List<Bomb> bombs = new ArrayList<>();
+        World world = game.getWorld();
+        if(this.getLifetime() == 0) {
+            for (Direction d : Direction.values()) {
+                for (int i = 1; i <= this.getRange(); i++) {
+                    Position nextPos = d.nextPosition(this.getPosition(), i);
+                    Position previousPos = d.nextPosition(this.getPosition(), i-1);
+
+                    if ((world.get(previousPos) instanceof Box ||
+                            (world.get(previousPos) instanceof Pickable && !(world.get(previousPos) instanceof Key)))
+                            || (!world.isEmpty(previousPos))){
+                        break;
+                    } else {
+                        bombs.add( new Bomb(game, nextPos, 0 ));
+                    }
+                }
+            }
+        }
+        return bombs;
+    }
+    public int getRange() {
+        return range;
+    }
 }
