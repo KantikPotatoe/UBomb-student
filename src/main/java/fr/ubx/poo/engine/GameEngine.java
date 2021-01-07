@@ -252,7 +252,7 @@ public final class GameEngine {
         bombSprites.forEach(Sprite::render);
         bombSprites.forEach(Sprite::remove);
         bombSprites.clear();
-        bombs.get(game.getActualLevel()).forEach(bomb -> {
+        bombs.get(game.getCurrentLevel()).forEach(bomb -> {
             bombSprites.add(SpriteFactory.createBomb(layer,bomb));
             bomb.createExplosions().forEach(b ->bombSprites.
                     add(SpriteFactory.createExplosion(layer,b)));

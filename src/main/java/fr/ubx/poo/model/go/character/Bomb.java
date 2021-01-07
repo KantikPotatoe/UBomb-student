@@ -79,8 +79,9 @@ public class Bomb extends GameObject {
                     Position nextPos = d.nextPosition(this.getPosition(), i);
                     Position previousPos = d.nextPosition(this.getPosition(), i-1);
 
-                    if ((world.get(previousPos) instanceof Box ||
-                            (world.get(previousPos) instanceof Pickable && !(world.get(previousPos) instanceof Key)))
+                    if ((world.getDecorAtPosition(previousPos) instanceof Box ||
+                            (world.getDecorAtPosition(previousPos) instanceof Pickable &&
+                                    !(world.getDecorAtPosition(previousPos) instanceof Key)))
                             || (!world.isEmpty(previousPos))){
                         break;
                     } else {

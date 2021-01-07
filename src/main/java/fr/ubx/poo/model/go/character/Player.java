@@ -99,17 +99,17 @@ public class Player extends GameObject implements Movable {
             if (game.getMonsterList().stream().anyMatch
                     (monster -> monster.getPosition().equals(this.getPosition()))) {
                 this.lives--;
-            } 
+            }
             moveRequested = false;
-            if (world.findPrincess().isPresent() &&
-                    world.findPrincess().get().equals(this.getPosition())) {
+            if (world.findPrincessPosition().isPresent() &&
+                   world.findPrincessPosition().get().equals(this.getPosition())) {
                 this.winner = true;
             }
-            if(this.getLives() <= 0){
+            if (this.getLives() <= 0) {
                 this.alive = false;
             }
+        }
     }
-
     private boolean isMoveRequestedAndCanMove(Direction direction) {
         return (moveRequested && canMove(direction));
     }
@@ -142,9 +142,9 @@ public class Player extends GameObject implements Movable {
             BombBonus bombBonus = (BombBonus) item;
             if (bombBonus.isRange()) {
                 if (bombBonus.isUp()) {
-                    this.sizeBombs += 1;
-                } else {
-                    this.sizeBombs += -1;
+                    this.sizeBombs ++;
+                } else if(sizeBombs != 1){
+                    this.sizeBombs --;
                 }
             } else {
                 if (bombBonus.isUp()) {

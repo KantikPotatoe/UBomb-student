@@ -13,7 +13,7 @@ public class Door extends Decor {
         this.opened = opened;
     }
 
-    public ImageResource getDoorEntity() {
+    public ImageResource getImageResource() {
         return opened ? ImageResource.DOOR_O : ImageResource.DOOR_C;
     }
 
