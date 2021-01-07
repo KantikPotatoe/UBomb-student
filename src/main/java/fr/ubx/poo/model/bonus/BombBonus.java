@@ -5,11 +5,11 @@ import fr.ubx.poo.view.image.ImageResource;
 
 public class BombBonus extends Pickable {
     // Définit si le bonus est en range ou non (sinon, alors augmentation du nombre)
-    private boolean range;
+    private final boolean range;
 
 
     //Définit si ça augmente ou non
-    private boolean up;
+    private final boolean up;
 
     public BombBonus(boolean range, boolean up){
         this.range = range;
@@ -24,7 +24,7 @@ public class BombBonus extends Pickable {
         return up;
     }
 
-    public ImageResource getEntity(){
+    public ImageResource getImageResource(){
         if(up){
             if(range){
                 return ImageResource.BOMBRUP;

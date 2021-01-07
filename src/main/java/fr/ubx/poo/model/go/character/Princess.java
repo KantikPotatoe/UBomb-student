@@ -4,9 +4,15 @@ import fr.ubx.poo.game.Game;
 import fr.ubx.poo.game.Position;
 import fr.ubx.poo.model.decor.Decor;
 import fr.ubx.poo.model.go.GameObject;
+import fr.ubx.poo.view.image.ImageResource;
 
 public class Princess extends Decor {
-    /*public Princess(Game game, Position position) {
-        super(game, position);
-    }*/
+    @Override
+    public String toString() {
+        return "Princess";
+    }
+    @Override
+    public ImageResource getImageResource() {
+        return ImageResource.PRINCESS;
+    }
 }
