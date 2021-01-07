@@ -5,6 +5,9 @@
 package fr.ubx.poo.game;
 
 
+import fr.ubx.poo.model.go.character.Monster;
+import fr.ubx.poo.model.go.character.Player;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,10 +15,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
-import fr.ubx.poo.model.go.character.Monster;
-import fr.ubx.poo.model.go.character.Player;
-import fr.ubx.poo.model.go.character.Princess;
+import java.util.stream.IntStream;
 
 public class Game {
 
@@ -25,29 +25,25 @@ public class Game {
     private String prefix;
     private int levels;
     private final List<Monster> monsterList;
-    private int actualLevel;
+    private int currentLevel;
     private boolean newWorld;
 
     public Game(String worldPath) {
         loadConfig(worldPath);
         monsterList = new ArrayList<>();
         world = new World[this.levels];
-        this.actualLevel = 0;
-        for (int i = actualLevel; i < levels; i++) {
+        this.currentLevel = 0;
+        IntStream.range(currentLevel, levels).forEach(i -> {
             WorldEntity[][] raw = WorldBuilder.generateWorld(worldPath + "/" + prefix + (i + 1) + ".txt");
             world[i] = new World(raw);
-        }
+        });
         newWorld = false;
-
-        Position positionPrincess = null;
 
         Position positionPlayer = findPlayer();
         player = new Player(this, positionPlayer);
 
         loadMonsters();
-     }
-
-    public int getInitPlayerLives() { return initPlayerLives; }
+    }
 
     private void loadConfig(String path) {
 
@@ -56,7 +52,7 @@ public class Game {
             // load the configuration file
             prop.load(input);
             initPlayerLives = Integer.parseInt(prop.getProperty("lives", "3"));
-            levels = Integer.parseInt(prop.getProperty("levels","3"));
+            levels = Integer.parseInt(prop.getProperty("levels", "3"));
             prefix = prop.getProperty("prefix", "level");
         } catch (IOException ex) {
             System.err.println("Error loading configuration");
@@ -64,22 +60,20 @@ public class Game {
     }
 
     public World getWorld() {
-        return world[actualLevel];
+        return world[currentLevel];
     }
 
     public Player getPlayer() {
         return player;
     }
 
-    public int getActualLevel() {
-        return actualLevel;
+    public int getCurrentLevel() {
+        return currentLevel;
     }
 
     private void loadMonsters() {
         monsterList.clear();
-        for (int i = 0; i < getWorld().findMonsters().size(); i++) {
-            monsterList.add(new Monster(this, getWorld().findMonsters().get(i)));
-        }
+        getWorld().findMonstersPositions().stream().map(position -> new Monster(this, position)).forEach(monsterList::add);
     }
 
 
@@ -88,7 +82,7 @@ public class Game {
     }
 
     public void changeLevel(boolean up) {
-        actualLevel += up ? 1 : -1;
+        currentLevel += up ? 1 : -1;
         loadMonsters();
         player.changeWorld();
         this.askNewWorld();
@@ -96,16 +90,18 @@ public class Game {
     }
 
     public Position findPlayer() {
-        return getWorld().findPlayer().orElseThrow();
+        return getWorld().findPlayerPosition().orElseThrow();
     }
 
-    public void askNewWorld() { this.newWorld = true;}
+    public void askNewWorld() {
+        this.newWorld = true;
+    }
 
     public void finishNewWorld() {
         this.newWorld = false;
     }
 
-    public boolean isNewWorld(){
+    public boolean isNewWorld() {
         return this.newWorld;
     }
 
@@ -113,7 +109,21 @@ public class Game {
         return levels;
     }
 
-    public World worldNumber (int n){
+    public World worldNumber(int n) {
         return world[n];
     }
+
+    public int getWorldHeight() {
+        return getWorld().getDimension().height;
+    }
+
+    public int getWorldWidth() {
+        return getWorld().getDimension().width;
+    }
+
+    public int getInitPlayerLives() {
+        return initPlayerLives;
+    }
+
+
 }

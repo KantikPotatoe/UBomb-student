@@ -21,20 +21,22 @@ import java.awt.*;
 
 public final class SpriteFactory {
 
+    private SpriteFactory(){
+        throw  new IllegalStateException("Static class");
+    }
+
     public static Sprite createDecor(Pane layer, Position position, Decor decor) {
         ImageFactory factory = ImageFactory.getInstance();
+
         return new SpriteDecor(layer, factory.get(decor.getImageResource()), position);
+
     }
 
     public static Sprite createPlayer(Pane layer, Player player) {
         return new SpritePlayer(layer, player);
     }
 
-  /*  public static Sprite createPrincess(Pane layer, Princess princess) {
-        ImageFactory factory = ImageFactory.getInstance();
-        return new SpritePrincess(layer, factory.get(PRINCESS), princess);
-    }*/
-    public static Sprite createBomb(Pane layer, Bomb bomb){
+    public static Sprite createBomb(Pane layer, Bomb bomb) {
         ImageFactory factory = ImageFactory.getInstance();
         return new SpriteBomb(layer, factory.get(bomb.getImageBomb()), bomb);
     }

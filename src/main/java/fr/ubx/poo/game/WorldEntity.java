@@ -4,34 +4,27 @@
 
 package fr.ubx.poo.game;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 public enum WorldEntity {
-    Empty('_'),
-    Box('B'),
-    Heart('H'),
-    Key('K'),
-    Monster('M'),
-    DoorPrevOpened('V'),
-    DoorNextOpened('N'),
-    DoorNextClosed('n'),
-    Player('P'),
-    Stone('S'),
-    Tree('T'),
-    Princess('W'),
-    BombRangeInc('>'),
-    BombRangeDec('<'),
-    BombNumberInc('+'),
-    BombNumberDec('-')
-        ;
+    EMPTY('_'),
+    BOX('B'),
+    HEART('H'),
+    KEY('K'),
+    MONSTER('M'),
+    DOOR_PREV_OPENED('V'),
+    DOOR_NEXT_OPENED('N'),
+    DOOR_NEXT_CLOSED('n'),
+    PLAYER('P'),
+    STONE('S'),
+    TREE('T'),
+    PRINCESS('W'),
+    BOMB_RANGE_INC('>'),
+    BOMB_RANGE_DEC('<'),
+    BOMB_NUMBER_INC('+'),
+    BOMB_NUMBER_DEC('-');
 
-
-    private char getCode() {
-        return code;
-    }
 
     private final char code;
 
@@ -41,7 +34,7 @@ public enum WorldEntity {
 
     public static Optional<WorldEntity> fromCode(char code) {
         return Arrays.stream(values())
-                .filter(e->e.acceptCode(code))
+                .filter(e -> e.acceptCode(code))
                 .findFirst();
     }
 
@@ -51,7 +44,7 @@ public enum WorldEntity {
 
     @Override
     public String toString() {
-        return ""+code;
+        return "" + code;
     }
 
 }

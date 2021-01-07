@@ -1,6 +1,5 @@
 package fr.ubx.poo.model.bonus;
 
-import fr.ubx.poo.game.WorldEntity;
 import fr.ubx.poo.view.image.ImageResource;
 
 public class BombBonus extends Pickable {

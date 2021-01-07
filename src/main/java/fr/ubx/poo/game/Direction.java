@@ -46,7 +46,7 @@ public enum Direction {
 
     public abstract Position nextPosition(Position pos, int delta);
 
-    final public Position nextPosition(Position pos) {
+    public final Position nextPosition(Position pos) {
         return nextPosition(pos, 1);
     }
 

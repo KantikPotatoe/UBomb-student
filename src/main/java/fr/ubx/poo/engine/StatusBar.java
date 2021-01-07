@@ -17,26 +17,22 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 public class StatusBar {
-    public static final int height = 55;
-    private HBox hBox = new HBox();
-    private Text liveValue = new Text();
-    private Text bombsValue = new Text();
-    private Text rangeValue = new Text();
-    private Text keyValue = new Text();
-    private HBox level = new HBox();
-    private int gameLevel = 1;
+    public static final int HEIGHT = 55;
+    private final Text liveValue = new Text();
+    private final Text bombsValue = new Text();
+    private final Text rangeValue = new Text();
+    private final Text keyValue = new Text();
+    private final HBox level = new HBox();
+    private static final int GAME_LEVEL = 1;
 
-    private final Game game;
     private final DropShadow ds = new DropShadow();
 
 
-
-    public StatusBar(Group root, int sceneWidth, int sceneHeight, Game game) {
+    public StatusBar(Group root, int sceneWidth, int sceneHeight) {
         // Status bar
-        this.game = game;
 
         level.getStyleClass().add("level");
-        level.getChildren().add(new ImageView(ImageFactory.getInstance().getDigit(gameLevel)));
+        level.getChildren().add(new ImageView(ImageFactory.getInstance().getDigit(GAME_LEVEL)));
 
         ds.setRadius(5.0);
         ds.setOffsetX(3.0);
@@ -53,15 +49,16 @@ public class StatusBar {
         status.setSpacing(40.0);
         status.getChildren().addAll(live, bombs, range, key);
 
+        HBox hBox = new HBox();
         hBox.getChildren().addAll(level, status);
         hBox.getStyleClass().add("statusBar");
         hBox.relocate(0, sceneHeight);
-        hBox.setPrefSize(sceneWidth, height);
+        hBox.setPrefSize(sceneWidth, HEIGHT);
         root.getChildren().add(hBox);
     }
 
     private void updateLevel(int n) {
-        if (n != gameLevel) {
+        if (n != GAME_LEVEL) {
             level.getChildren().clear();
             level.getChildren().add(new ImageView(ImageFactory.getInstance().getDigit(n)));
         }
@@ -80,7 +77,7 @@ public class StatusBar {
     }
 
     public void update(Game game) {
-        updateLevel(game.getActualLevel()+1);
+        updateLevel(game.getCurrentLevel() + 1);
         liveValue.setText(String.valueOf(game.getPlayer().getLives()));
         rangeValue.setText(String.valueOf(game.getPlayer().getSizeBombs()));
         bombsValue.setText(String.valueOf(game.getPlayer().getBombsNumber()));
