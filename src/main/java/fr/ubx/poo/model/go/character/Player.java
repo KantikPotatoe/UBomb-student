@@ -7,13 +7,12 @@ package fr.ubx.poo.model.go.character;
 import fr.ubx.poo.game.*;
 import fr.ubx.poo.model.Movable;
 import fr.ubx.poo.model.bonus.BombBonus;
-import fr.ubx.poo.model.bonus.Heart;
-import fr.ubx.poo.model.bonus.Key;
 import fr.ubx.poo.model.bonus.Pickable;
 import fr.ubx.poo.model.decor.Box;
 import fr.ubx.poo.model.decor.Decor;
 import fr.ubx.poo.model.decor.Door;
 import fr.ubx.poo.model.go.GameObject;
+import fr.ubx.poo.view.image.ImageResource;
 
 public class Player extends GameObject implements Movable {
 
@@ -72,15 +71,15 @@ public class Player extends GameObject implements Movable {
     public boolean canMove(Direction direction) {
         Position nextPos = direction.nextPosition(getPosition());
         boolean can = world.isDoor(nextPos) || world.isPickable(nextPos) || world.isEmpty(nextPos);
-        return (can || world.isBoxMovable(nextPos, direction)) &&
-                world.isInside(nextPos);
+        return (can || (world.isBoxMovable(nextPos, direction) && !game.containsMonster(direction.nextPosition(nextPos))))
+                && world.isInside(nextPos);
 
     }
 
     public void doMove(Direction direction) {
         Position nextPos = direction.nextPosition(getPosition());
         Decor decor = world.getDecorAtPosition(nextPos);
-        if (decor instanceof Box) {
+        if (decor instanceof Box ) {
             world.clearPosition(nextPos);
             world.setDecorAtPosition(direction.nextPosition(nextPos), decor);
         } else if (decor instanceof Door) {
@@ -134,9 +133,9 @@ public class Player extends GameObject implements Movable {
     }
 
     public void pickItem(Pickable item) {
-        if (item instanceof Key)
+        if (item.getImageResource() == ImageResource.KEY)
             this.keys++;
-        else if (item instanceof Heart)
+        else if (item.getImageResource() == ImageResource.HEART)
             this.lives++;
         else if (item instanceof BombBonus) {
             BombBonus bombBonus = (BombBonus) item;

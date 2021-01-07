@@ -12,9 +12,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class Game {
@@ -24,25 +22,26 @@ public class Game {
     private int initPlayerLives;
     private String prefix;
     private int levels;
-    private final List<Monster> monsterList;
+    private final Map<Integer, List<Monster>> monsterList;
     private int currentLevel;
     private boolean newWorld;
 
     public Game(String worldPath) {
         loadConfig(worldPath);
-        monsterList = new ArrayList<>();
+        monsterList = new HashMap<>();
         world = new World[this.levels];
         this.currentLevel = 0;
         IntStream.range(currentLevel, levels).forEach(i -> {
             WorldEntity[][] raw = WorldBuilder.generateWorld(worldPath + "/" + prefix + (i + 1) + ".txt");
             world[i] = new World(raw);
+            monsterList.put(i, new ArrayList<>());
         });
         newWorld = false;
 
         Position positionPlayer = findPlayer();
         player = new Player(this, positionPlayer);
-
         loadMonsters();
+
     }
 
     private void loadConfig(String path) {
@@ -72,18 +71,21 @@ public class Game {
     }
 
     private void loadMonsters() {
-        monsterList.clear();
-        getWorld().findMonstersPositions().stream().map(position -> new Monster(this, position)).forEach(monsterList::add);
+        monsterList.get(getCurrentLevel()).clear();
+        getWorld().initMonstersPositions().stream().map(position -> new Monster(this, position))
+                .forEach(monsterList.get(getCurrentLevel())::add);
     }
 
 
     public List<Monster> getMonsterList() {
-        return this.monsterList;
+        return this.monsterList.get(this.getCurrentLevel());
     }
 
     public void changeLevel(boolean up) {
         currentLevel += up ? 1 : -1;
-        loadMonsters();
+        if (getMonsterList().isEmpty()){
+            loadMonsters();
+        }
         player.changeWorld();
         this.askNewWorld();
 
@@ -125,5 +127,8 @@ public class Game {
         return initPlayerLives;
     }
 
+    public boolean containsMonster(Position position){
+        return getMonsterList().stream().anyMatch(monster -> monster.getPosition().equals(position));
+    }
 
 }

@@ -9,6 +9,7 @@ import fr.ubx.poo.model.decor.Box;
 import fr.ubx.poo.model.decor.Decor;
 import fr.ubx.poo.model.decor.Door;
 import fr.ubx.poo.model.go.character.Princess;
+import fr.ubx.poo.view.image.ImageResource;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -51,7 +52,7 @@ public class World {
         return Optional.empty();
     }
 
-    public List<Position> findMonstersPositions() {
+    public List<Position> initMonstersPositions() {
         List<Position> positions = new ArrayList<>();
         for (int x = 0; x < dimension.width; x++) {
             for (int y = 0; y < dimension.height; y++) {
@@ -104,8 +105,8 @@ public class World {
 
     public boolean isBoxMovable(Position position, Direction direction) {
         Position nextPos = direction.nextPosition(position);
-        return grid.get(position) instanceof Box && isEmpty(nextPos) && isInside(nextPos)
-                && !isDoor(nextPos) && !isPickable(nextPos);
+        return grid.get(position).getImageResource() == ImageResource.BOX && isEmpty(nextPos) && isInside(nextPos)
+                && !isDoor(nextPos) && !isPickable(nextPos) ;
     }
 
     public boolean worldHasChanged() {
