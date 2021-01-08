@@ -41,4 +41,13 @@ public class Position {
     public boolean inside(Dimension d) {
         return x >= 0 && x < d.width && y >= 0 && y < d.height;
     }
+
+    /**
+     *
+     * @param position Position que l'on veut voir par rapport à l'actuelle.
+     * @return La distance entre les deux positions;
+     */
+    public double distance(Position position){
+        return Math.sqrt(Math.pow(this.x - position.x,2) + Math.pow(this.y - position.y ,2));
+    }
 }

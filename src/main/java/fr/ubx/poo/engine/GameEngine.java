@@ -7,12 +7,8 @@ package fr.ubx.poo.engine;
 import fr.ubx.poo.game.Direction;
 import fr.ubx.poo.game.Game;
 
-import fr.ubx.poo.game.Position;
-import fr.ubx.poo.game.World;
-import fr.ubx.poo.model.bonus.Key;
-import fr.ubx.poo.model.bonus.Pickable;
-import fr.ubx.poo.model.decor.Box;
 import fr.ubx.poo.model.go.character.Bomb;
+import fr.ubx.poo.model.go.character.Monster;
 import fr.ubx.poo.model.go.character.Player;
 import fr.ubx.poo.view.sprite.Sprite;
 import fr.ubx.poo.view.sprite.SpriteFactory;
@@ -139,7 +135,7 @@ public final class GameEngine {
                     bombActionManager();
 
 
-                    game.getMonsterList().forEach(monster -> monster.doMove(Direction.random()));
+                    game.getMonsterList().forEach(Monster::updatePosition);
                 }
                 update(now);
 
@@ -150,6 +146,10 @@ public final class GameEngine {
         };
     }
 
+    /**
+     * Fonction utilisée pour gérer les bombes à chaque seconde : la durée de vie des bombes va diminuer et
+     * la destruction sera lancée. Puis, après l'explosion, les bombes seront envoyées dans l'inventaire du joueur.
+     */
     private void bombActionManager() {
         bombs.forEach((w, bomb) -> bomb.forEach(Bomb::dropTime));
         bombs.forEach((w, bombList) -> bombList.stream().filter(bomb -> bomb.getLifetime() < 0).forEach(bomb -> {
@@ -180,7 +180,7 @@ public final class GameEngine {
             player.requestMove(Direction.N);
         }
         if (input.isBomb() && playerHaveBomb()) {
-            addBombToPlayer();
+            setBomb();
         }
         if (input.isKey()) {
             player.openDoor();
@@ -188,7 +188,10 @@ public final class GameEngine {
         input.clear();
     }
 
-    private void addBombToPlayer() {
+    /**
+     * Fonction permettant de poser une bombe, déclenchée si la touche est bien tapée et que le joueur a une bombe.
+     */
+    private void setBomb() {
         Bomb bomb = new Bomb(game, player.getPosition(), player.getSizeBombs());
         this.bombSprites.add(SpriteFactory.createBomb(layer, bomb));
         this.bombs.get(game.getCurrentLevel()).add(bomb);
@@ -245,21 +248,22 @@ public final class GameEngine {
         gameLoop.start();
     }
 
-
+    /**
+     * Permet le rendu des bombes et des explosions avec les sprites
+     */
     private void renderBombs() {
         clearSprites(bombSprites);
-        bombs.get(game.getCurrentLevel()).forEach(bomb -> bombSprites.add(SpriteFactory.createBomb(layer, bomb)));
-        bombSprites.forEach(Sprite::render);
-        bombSprites.forEach(Sprite::remove);
-        bombSprites.clear();
         bombs.get(game.getCurrentLevel()).forEach(bomb -> {
-            bombSprites.add(SpriteFactory.createBomb(layer,bomb));
-            bomb.createExplosions().forEach(b ->bombSprites.
-                    add(SpriteFactory.createExplosion(layer,b)));
+            bombSprites.add(SpriteFactory.createBomb(layer, bomb));
+            bomb.createExplosions().forEach(b -> bombSprites.
+                    add(SpriteFactory.createExplosion(layer, b)));
         });
         bombSprites.forEach(Sprite::render);
     }
 
+    /**
+     * Fonction utilisée pour mettre à jour l'aperçu global de toutes les entités en jeu.
+     */
     private void renderGameEntities() {
         sprites.forEach(Sprite::render);
         spritePlayer.render(); // Rendering last to have the player on the foreground.
@@ -270,6 +274,10 @@ public final class GameEngine {
 
     }
 
+    /**
+     * Quand le monde connaît un changement dans les décors ou dans les monstres (déplacement ou destruction),
+     * fonction utilisée pour mettre à jour l'aperçu global
+     */
     private void renderWorldWhenChanged() {
         clearSprites(sprites);
         game.getWorld().forEach((pos, d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
@@ -278,6 +286,9 @@ public final class GameEngine {
         game.getMonsterList().stream().map(monster -> SpriteFactory.createMonster(layer, monster)).forEach(monsterSprites::add);
     }
 
+    /**
+     * Fonction permettant de générer l'aperçu du monde quand il est changé.
+     */
     private void renderNewWorld() {
         game.finishNewWorld();
         clearSprites(monsterSprites);
@@ -286,16 +297,28 @@ public final class GameEngine {
         initialize(stage, game);
     }
 
-    private void clearSprites(List<Sprite> monsterSprites) {
-        monsterSprites.forEach(Sprite::remove);
-        monsterSprites.clear();
+    /**
+     * Fonction enlevant le rendu des sprites puis vidant le contenu de la liste passée en paramètre.
+     * @param sprites Liste que l'on veut vider
+     */
+    private void clearSprites(List<Sprite> sprites) {
+        sprites.forEach(Sprite::remove);
+        sprites.clear();
     }
 
-
+    /**
+     *
+     * @param game La partie
+     * @return Si la princesse est présente dans le monde actuel
+     */
     private boolean isPrincessInWorld(Game game) {
         return game.getWorld().getPrincess().isPresent() && game.getWorld().findPrincessPosition().isPresent();
     }
 
+    /**
+     *
+     * @return Vrai si le joueur possède au moins une bombe.
+     */
     private boolean playerHaveBomb() {
         return player.getBombsNumber() > 0;
     }

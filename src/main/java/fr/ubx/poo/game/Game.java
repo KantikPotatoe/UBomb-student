@@ -31,6 +31,7 @@ public class Game {
         monsterList = new HashMap<>();
         world = new World[this.levels];
         this.currentLevel = 0;
+        //Génère le monde pour chaque niveau, les niveaux sont récupérés dans le fichier de configuration.
         IntStream.range(currentLevel, levels).forEach(i -> {
             WorldEntity[][] raw = WorldBuilder.generateWorld(worldPath + "/" + prefix + (i + 1) + ".txt");
             world[i] = new World(raw);
@@ -44,6 +45,13 @@ public class Game {
 
     }
 
+    /**
+     * Récupère les données du fichier de configuration passé en paramètre et met à jour toutes les informations importantes :
+     * Le nombre de vie du joueur au départ (par défaut 3)
+     * Le nombre de niveau disponible (par défaut 3)
+     * Les préfix pour les fichiers de niveau.
+     * @param path Chemin vers le fichier de configuration
+     */
     private void loadConfig(String path) {
 
         try (InputStream input = new FileInputStream(new File(path, "config.properties"))) {
@@ -58,18 +66,33 @@ public class Game {
         }
     }
 
+    /**
+     *
+     * @return Le monde du niveau actuel, affiché à l'écran
+     */
     public World getWorld() {
         return world[currentLevel];
     }
 
+    /**
+     *
+     * @return Le joueur et ses données
+     */
     public Player getPlayer() {
         return player;
     }
 
+    /**
+     *
+     * @return Récupère le niveau actuel ou se trouve le joueur (et qui est donc affiché à l'écran)
+     */
     public int getCurrentLevel() {
         return currentLevel;
     }
 
+    /**
+     * Génère les monstres dans le monde actuel.
+     */
     private void loadMonsters() {
         monsterList.get(getCurrentLevel()).clear();
         getWorld().initMonstersPositions().stream().map(position -> new Monster(this, position))
@@ -77,58 +100,106 @@ public class Game {
     }
 
 
+    /**
+     * Récupère la liste des monstres dans le monde actuel
+     * @return Liste de monstres
+     */
     public List<Monster> getMonsterList() {
         return this.monsterList.get(this.getCurrentLevel());
     }
 
+    /**
+     * Change le niveau actuel du monde en fonction de la porte qui a été traversée.
+     * @param up On augmente de niveau ou non.
+     */
     public void changeLevel(boolean up) {
         currentLevel += up ? 1 : -1;
         if (getMonsterList().isEmpty()){
             loadMonsters();
         }
         player.changeWorld();
-        this.askNewWorld();
+        this.newWorld = true;
+
 
     }
 
+    /**
+     *
+     * @return La position du joueur dans le monde.
+     */
     public Position findPlayer() {
         return getWorld().findPlayerPosition().orElseThrow();
     }
 
-    public void askNewWorld() {
-        this.newWorld = true;
-    }
-
+    /**
+     * Le nouveau monde a fini de chargé
+     */
     public void finishNewWorld() {
         this.newWorld = false;
     }
 
+    /**
+     *
+     * @return Si le monde est un nouveau monde ou non
+     */
     public boolean isNewWorld() {
         return this.newWorld;
     }
 
+    /**
+     *
+     * @return Le nombre de niveau de la partie
+     */
     public int getLevels() {
         return levels;
     }
 
+    /**
+     *
+     * @param n numéro du monde souhaité
+     * @return Renvoie le monde numéro n du tableau
+     */
     public World worldNumber(int n) {
         return world[n];
     }
 
+    /**
+     *
+     * @return Hauteur de la dimension du monde actuel
+     */
     public int getWorldHeight() {
         return getWorld().getDimension().height;
     }
 
+    /**
+     *
+      * @return Largeur de la dimension du monde actuel
+     */
     public int getWorldWidth() {
         return getWorld().getDimension().width;
     }
+
 
     public int getInitPlayerLives() {
         return initPlayerLives;
     }
 
+    /**
+     *
+     * @param position Position dans l'espace
+     * @return Vrai si un monstre est présent dans cette position
+     */
     public boolean containsMonster(Position position){
         return getMonsterList().stream().anyMatch(monster -> monster.getPosition().equals(position));
+    }
+
+    /**
+     *
+     * @param position Position de l'entité dont on veut connaître la distance par rapport au joueur
+     * @return Distance par rapport au joueur
+     */
+    public double distancePlayer(Position position){
+        return player.getPosition().distance(position);
     }
 
 }
