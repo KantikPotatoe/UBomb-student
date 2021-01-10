@@ -139,8 +139,7 @@ public class World {
      * @return A la position entrée en paramètre se trouve une porte.
      */
     public boolean isDoor(Position position) {
-        return (grid.get(position).getImageResource() == ImageResource.DOOR_C ||
-                grid.get(position).getImageResource() == ImageResource.DOOR_O)
+        return grid.get(position) instanceof Door
                 && ((Door) grid.get(position)).isOpened();
     }
 

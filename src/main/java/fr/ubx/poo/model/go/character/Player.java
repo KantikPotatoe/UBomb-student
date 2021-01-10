@@ -104,7 +104,7 @@ public class Player extends GameObject implements Movable {
     @Override
     public boolean canMove(Direction direction) {
         Position nextPos = direction.nextPosition(getPosition());
-        boolean can = world.isDoor(nextPos) || world.isPickable(nextPos) || world.isEmpty(nextPos);
+        boolean can = world.isEmpty(nextPos) || world.isDoor(nextPos) || world.isPickable(nextPos)  ;
         return (can || (world.isBoxMovable(nextPos, direction) && !game.containsMonster(direction.nextPosition(nextPos))))
                 && world.isInside(nextPos);
 
