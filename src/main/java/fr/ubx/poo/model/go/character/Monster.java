@@ -52,15 +52,20 @@ public class Monster extends GameObject implements Movable {
      */
     public Direction choosePosition(){
         Direction dir = Direction.random();
-        double distanceMin = 0;
+        Position pos;
+        double distanceMin = -1;
         double distanceNew;
         for(Direction d : Direction.values()){
-            distanceNew = game.distancePlayer(d.nextPosition(this.getPosition()));
-            if(distanceMin >= distanceNew) {
+            pos = d.nextPosition(this.getPosition());
+            distanceNew = game.distancePlayer(pos);
+            //Le choix de la nouvelle position se fait ici
+            if((distanceMin == -1 || distanceMin >= distanceNew) && this.canMove(d)) {
                 distanceMin = distanceNew;
                 dir = d;
             }
+
         }
+
         return dir;
     }
 }
